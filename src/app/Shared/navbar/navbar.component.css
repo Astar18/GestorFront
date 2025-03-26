@@ -1,0 +1,29 @@
+/* Estilo para el menubar */
+.ui-menubar {
+  background-color: #003366; /* Azul oscuro */
+}
+
+.ui-menubar .p-menuitem-link {
+  color: white;
+}
+
+.ui-menubar .p-menuitem-link:hover {
+  background-color: #00509e; /* Azul más claro al pasar el cursor */
+}
+
+/* Estilo para el drawer */
+.ui-drawer {
+  background-color: #003366; /* Azul oscuro */
+}
+
+.ui-drawer .p-drawer-header {
+  background-color: #00509e; /* Azul más claro para el encabezado */
+  color: white;
+}
+
+.ui-drawer .p-drawer-content {
+  color: black;
+}
+::ng-deep .p-menubar {
+  background-color: #003366;
+}

@@ -1,0 +1,51 @@
+:host {
+  display: block;
+  height: 100vh;
+  background-image: url('../../../assets/logo.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.logo {
+  max-width: 100px;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+.links {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.links a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
