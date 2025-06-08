@@ -1,0 +1,74 @@
+.container {
+    padding: 20px;
+  }
+
+  .search-section {
+    margin-bottom: 2rem;
+  }
+
+  .search-inputs {
+    display: flex;
+    gap: 5%;
+    flex-wrap: wrap;
+  }
+
+  .branch-search {
+    flex: 1;
+    min-width: 200px;
+  }
+  .aceptarCaja{
+    background-color: #caf1d8;
+    color: #188a42;
+    border-color: transparent;
+    border-radius: 12px;
+  }
+  .rechazarCaja{
+    background-color: #ffd0ce;
+    color: #b32b23;
+    border-color: transparent;
+    border-radius: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .search-inputs {
+      flex-direction: column;
+    }
+
+    .p-calendar {
+      width: 100%;
+    }
+  }
+
+  /* Estilos para la tabla responsive */
+  @media screen and (max-width: 960px) {
+    .p-datatable.p-datatable-responsive .p-datatable-tbody > tr > td {
+      display: flex;
+      width: 100%;
+    }
+
+    .p-datatable.p-datatable-responsive .p-datatable-thead > tr > th {
+      display: none;
+    }
+  }
+  ::ng-deep .p-select{
+    width: 30% !important;
+  }
+  ::ng-deep .marcada {
+    background-color: #229936d5;
+    border-radius: 6px;
+    color: black;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex
+
+  }
+  .disabled-button {
+    background-color: #ccc !important;   /* Fondo gris */
+    border-color: #aaa !important;
+    color: #666 !important;              /* Texto gris */
+    cursor: not-allowed;
+    opacity: 0.7;
+  }

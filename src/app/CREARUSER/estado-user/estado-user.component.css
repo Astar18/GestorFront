@@ -1,0 +1,65 @@
+.acciones{
+  gap: 10px;
+  display: flex;
+  justify-content: center;
+
+}
+.card.p-fluid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* Espacio entre los campos */
+  justify-content: space-between; /* Espaciado entre los campos */
+  padding: 8px;
+  align-items: center;
+}
+
+.field {
+  flex: 1 1 calc(25% - 16px); /* 3 campos por fila en pantallas grandes */
+  min-width: 250px; /* Asegura que cada campo tenga un mínimo de tamaño */
+  margin-bottom: 16px; /* Espacio debajo de los campos */
+}
+
+.field label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.p-inputtext,
+.p-dropdown {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+}
+
+.p-button {
+  width: 100%;
+  margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+  .card.p-fluid {
+    flex-direction: column; /* En pantallas pequeñas, pone los campos en columna */
+  }
+
+  .field {
+    flex: 1 1 100%; /* Cada campo ocupa toda la fila */
+  }
+
+  .p-button {
+    width: auto; /* El botón no ocupa toda la fila en pantallas pequeñas */
+    align-self: center;
+  }
+}
+::ng-deep .butFiltro .p-button{
+  margin-left: 10px;
+  margin-top: 10px;
+  background-color: #10b981;
+  color: white;
+  width: 100%;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+
+}

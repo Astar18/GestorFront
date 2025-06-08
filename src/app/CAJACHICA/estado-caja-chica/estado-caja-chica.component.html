@@ -1,0 +1,23 @@
+<p-table [value]="documentosConRuta"  [scrollable]="true" scrollHeight="400px">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Número de Comprobante</th>
+      <th>Documento</th>
+      <th>Fecha</th>
+      <th>Comentario Procesador</th>
+      <th>Comentario Cargador</th>
+      <th>Estado</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-documento>
+    <tr>
+      <td>{{documento.numeroComprobante}}</td>
+      <td>{{ documento.documentoNombre }}</td>
+      <td>{{ documento.fechaCreacion | date }}</td>
+      <td>{{documento.comentario}}</td>
+      <td>{{documento.comentarioCargador}}</td>
+
+      <td>{{ documento.estado }}</td>
+    </tr>
+  </ng-template>
+</p-table>

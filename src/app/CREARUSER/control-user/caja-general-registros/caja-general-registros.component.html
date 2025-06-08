@@ -1,0 +1,40 @@
+<div class="stepper-content">
+  <p-table [value]="cajaGeneralData"
+  [paginator]="true"
+  [lazy]="true"
+  [(first)]="firstGeneral"
+  [(rows)]="pageSize"
+  [totalRecords]="totalCajaGeneral"
+  (onPage)="onPageChangeGeneral($event)"
+  [loading]="loading"
+  [responsiveLayout]="'scroll'">
+
+
+<ng-template pTemplate="header">
+<tr>
+<th>Documento</th>
+<th>Fecha de Creación</th>
+<th>Estado Actual</th>
+<th>Último Estado</th>
+<th>Fecha Último Cambio</th>
+<th>Usuario Cargador</th>
+<th>Usuario Procesador</th>
+<th>Sucursal</th>
+</tr>
+</ng-template>
+
+<ng-template pTemplate="body" let-caja>
+<tr>
+<td>{{ caja.documentoNombre }}</td>
+<td>{{ caja.fechaCreacion | date:'short'}}</td>
+<td>{{ caja.estado }}</td>
+<td>{{ caja.ultimoEstado || 'No disponible' }}</td>
+<td>{{ caja.fechaUltimoCambio ? (caja.fechaUltimoCambio | date:'short') : 'No disponible' }}</td>
+<td>{{ caja.cargadorNombre }}</td>
+<td>{{ caja.usuarioCambioNombre }}</td>
+<td>{{ caja.sucursalNombre }}</td>
+</tr>
+</ng-template>
+</p-table>
+
+</div>

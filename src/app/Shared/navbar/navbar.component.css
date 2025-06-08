@@ -2,11 +2,50 @@
 .ui-menubar {
   background-color: #003366; /* Azul oscuro */
 }
-
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0px; /* Espacio entre los botones */
+  padding: 2px;
+}
 .ui-menubar .p-menuitem-link {
   color: white;
 }
-
+::ng-deep .navButt  .p-button  {
+  background-color: transparent !important;
+  background: transparent !important;
+  border-color: #003366;
+  width: 100% !important;
+}
+::ng-deep .navButt  .p-button:hover  {
+  background-color: #00509e !important;
+  border-color: #00509e !important;
+  color: rgb(175, 175, 175) !important;
+  width: 100% !important;
+}
+::ng-deep .BarButt .p-button{
+  background-color: transparent !important;
+  background: transparent !important;
+  border-color: #003366;
+}
+::ng-deep .BarButt .p-button:hover{
+  background-color: #00509e !important;
+  border-color: #00509e !important;
+  color: rgb(255, 255, 255) !important;
+}
+/* ::ng-deep .p-ripple{
+  width: 100%;
+} */
+.menuBut{
+  display: flex;
+      gap: 0px;
+      align-content: center;
+      justify-content: center;
+      flex-direction: column;
+      flex-wrap: wrap;
+      align-items: center;
+}
+::ng-deep
 .ui-menubar .p-menuitem-link:hover {
   background-color: #00509e; /* Azul más claro al pasar el cursor */
 }
@@ -20,10 +59,38 @@
   background-color: #00509e; /* Azul más claro para el encabezado */
   color: white;
 }
+.logo{
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  transform: scale(1.2);
+  object-fit: cover;
+}
 
 .ui-drawer .p-drawer-content {
   color: black;
 }
+::ng-deep .p-menubar .p-menubar-end {
+  display: flex; /* Usamos flexbox para alinear los elementos */
+  align-items: center; /* Alineamos verticalmente los elementos */
+}
 ::ng-deep .p-menubar {
-  background-color: #003366;
+  background-color: #003366 !important;
+  border-radius: 0px !important;
+  border: none  !important;
+  padding: 1.5% 2% 1.5% 2% !important;
+}
+::ng-deep .p-drawer-left{
+  width: 80px   !important;
+  background-color: #003366 !important;
+  border-color: #003366 !important;
+}
+::ng-deep .p-drawer-header{
+  padding: 0px !important;
+  align-items: center   !important;
+  justify-content: center !important;
+}
+::ng-deep .p-drawer-content{
+  padding: 0px !important;
+
 }

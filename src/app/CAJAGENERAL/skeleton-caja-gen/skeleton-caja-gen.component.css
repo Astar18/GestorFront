@@ -1,0 +1,39 @@
+.styled-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.custom-stepper {
+  --step-header-background: #e0e0e0;
+  --step-header-active-background: #007ad9;
+  --step-header-color: #333;
+  --step-header-active-color: white;
+  --step-connector-color: #ccc;
+}
+
+.stepper-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stepper-title {
+  font-size: 20px;
+  color: #0461a8;
+}
+
+.stepper-content {
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+::ng-deep .p-tabview .p-tabview-nav li .p-tabview-nav-link{
+  padding: 0px 50px 0px 50px !important;
+}
+

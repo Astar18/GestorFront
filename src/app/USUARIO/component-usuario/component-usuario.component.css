@@ -1,0 +1,34 @@
+.custom-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.custom-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.custom-field label {
+  margin-bottom: 5px;
+}
+
+.custom-button {
+  grid-column: span 3;
+  text-align: center;
+  margin-top: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .custom-grid {
+    grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+  }
+
+  .custom-button {
+    grid-column: span 1;
+  }
+}
+
+::ng-deep .p-treeselect{
+  display: flex;
+}

@@ -1,0 +1,16 @@
+.p-datatable-sm {
+  width: 100%;
+}
+
+.p-button-rounded {
+  margin: 0 auto;
+  display: block;
+}
+.butDescarga{
+  background-color: transparent;
+  border-color: transparent;
+  padding: 5px 10px 5px 10px;
+}
+.menu-icon{
+  font-size: 34px !important;
+}

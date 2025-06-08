@@ -1,0 +1,40 @@
+<div class="stepper-content">
+  <div class="control-container">
+    <p-table [value]="cajaChicaData"
+   [paginator]="true"
+   [(first)]="firstChica"
+   [(rows)]="pageSize"
+   [totalRecords]="totalRecords"
+   (onPage)="onPageChangeChica($event)"
+   [loading]="loading"
+   [responsiveLayout]="'scroll'">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <!-- <th>ID</th> -->
+          <th>Documento</th>
+          <th>Fecha de Creación</th>
+          <th>Estado Actual</th>
+          <th>Último Estado</th>
+          <th>Fecha Último Cambio</th>
+          <th>Usuario Cargador</th>
+          <th>Usuario Procesador</th>
+          <th>Sucursal</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-caja>
+        <tr>
+          <!-- <td>{{ caja.id }}</td> -->
+          <td>{{ caja.documentoNombre }}</td>
+          <td>{{ caja.fechaCreacion | date:'short' }}</td>
+          <td>{{ caja.estado }}</td>  <!-- Se asume que 'estado' es el estado actual -->
+          <td>{{ caja.ultimoEstado || 'No disponible' }}</td> <!-- Verificación por si es null -->
+          <td>{{ caja.fechaUltimoCambio ? (caja.fechaUltimoCambio | date:'short') : 'No disponible' }}</td> <!-- Verificación por si es null -->
+          <td>{{ caja.cargadorNombre }}</td>
+          <td>{{caja.usuarioCambioNombre}}</td>
+          <td>{{caja.sucursalNombre}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

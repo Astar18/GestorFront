@@ -1,0 +1,105 @@
+<p-toast />
+<div class="container">
+  <h2 style="text-align: center">
+    Gestión de Perfiles y Sucursales a Usuario Procesador
+  </h2>
+
+  <!-- Crear un nuevo perfil -->
+  <div class="seccion">
+    <label>Crear Perfil: </label>
+    <input
+      class="inputPerfil"
+      pInputText
+      type="text"
+      [(ngModel)]="nuevoPerfil"
+      name="nuevoPerfil"
+      placeholder="Nombre del perfil"
+      [value]="'Procesador'"
+      [disabled]="true"
+    />
+    <input
+      class="inputPerfil"
+      pInputText
+      type="text"
+      [(ngModel)]="nuevoPerfilSufijo"
+      name="nuevoPerfilSufijo"
+      placeholder="Ingrese el Nombre"
+    />
+    <input
+      class="inputPerfil"
+      pInputText
+      type="text"
+      [(ngModel)]="nuevoPerfilSufijo2"
+      name="nuevoPerfilSufijo2"
+      placeholder="Ingrese el Apellido"
+    />
+
+    <p-button
+      class="butPerfil"
+      label="Crear"
+      (onClick)="crearPerfil()"
+    ></p-button>
+  </div>
+
+  <!-- Seleccionar perfil y asignar sucursales -->
+  <h3>Asignar Sucursales a un Perfil</h3>
+  <div class="seccion">
+    <label>Selecciona un perfil:</label>
+    <p-select
+      [options]="perfiles"
+      optionLabel="tipoPerfil"
+      [(ngModel)]="perfilSeleccionado"
+      name="perfilSeleccionado"
+    ></p-select>
+
+    <label>Selecciona las sucursales:</label>
+    <p-multiSelect
+      [options]="sucursales"
+      [filter]="false"
+      optionLabel="nombre"
+      optionValue="id"
+      placeholder="Selecciona las sucursales"
+      [(ngModel)]="sucursalesSeleccionadas"
+      name="sucursalesSeleccionadas"
+    ></p-multiSelect>
+
+    <p-button
+      label="Asignar Sucursales"
+      (onClick)="asignarSucursales()"
+    ></p-button>
+  </div>
+  <h3>Editar Sucursales a un Perfil</h3>
+
+  <div class="seccion">
+    <label>Editar un perfil:</label>
+    <p-select
+      [options]="perfilesCS"
+      optionLabel="tipoPerfil"
+      [(ngModel)]="perfilSeleccionado"
+      name="perfilSeleccionado"
+      (ngModelChange)="onPerfilChange()"
+    ></p-select>
+  </div>
+  <div class="seccion2">
+    <p-table [value]="[1]" [responsive]="true" *ngIf="perfilSeleccionado" [style]="{'width': '100%', 'overflow': 'auto'}">
+      <ng-template pTemplate="header">
+        <tr>
+          <th *ngFor="let sucursal of sucursales">
+            {{ sucursal.codigoSucursal }}
+          </th>
+          <th>Editar</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body">
+        <tr>
+          <td *ngFor="let sucursal of sucursales">
+              <input type="text" [(ngModel)]="sucursalesCheckeadas[sucursal.id]" class="input-x"/>
+          </td>
+          <td>
+              <p-button  (click)="actualizarSucursalesPerfil()"><mat-icon aria-hidden="false"  fontIcon="edit_note"></mat-icon></p-button>
+          </td>
+      </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

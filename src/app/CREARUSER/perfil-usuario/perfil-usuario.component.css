@@ -1,0 +1,63 @@
+.container {
+  width: 100%;
+  margin: auto;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.seccion {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espaciado entre los elementos */
+  margin-bottom: 20px;
+}
+.seccion2 {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espaciado entre los elementos */
+  margin-bottom: 20px;
+  justify-content: center;
+}
+.input-x {
+  width: 20px; /* Ajusta el ancho según necesites */
+  text-align: center; /* Centra la "X" */
+}
+::ng-deep  .p-inputtext {
+  width: 100% !important;
+}
+::ng-deep .p-select{
+  width: 100% !important;
+}
+::ng-deep .p-multiselect{
+  width: 100% !important;
+}
+
+p-inputText, p-button {
+  flex: 1; /* Para que todos los elementos tomen un tamaño proporcional */
+}
+
+p-button {
+  width: auto; /* El tamaño del botón depende del contenido */
+}
+::ng-deep .butPerfil .p-button{
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+  }
+
+  .seccion {
+    flex-direction: column; /* Cambia a columna en pantallas pequeñas */
+    align-items: flex-start; /* Alinea los elementos al inicio */
+  }
+
+  p-inputText, p-button {
+    width: 100%; /* Asegura que los elementos ocupen el 100% del ancho en pantallas pequeñas */
+  }
+
+  p-button {
+    margin-top: 10px; /* Agrega un pequeño margen superior al botón */
+  }
+}

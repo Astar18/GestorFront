@@ -1,0 +1,21 @@
+.containerSK{
+    width: 100%;
+  
+    left: 0;
+    right: 0;
+  
+  
+  }
+    .container app-navbar-cajas {
+      display: block;
+    margin-bottom: 9.5px; /* Espacio entre los componentes */
+  }
+  
+  .container app-skeleton-caja-chica {
+      margin-bottom: 0;
+      width: 100%;
+  
+  
+  
+  }
+  

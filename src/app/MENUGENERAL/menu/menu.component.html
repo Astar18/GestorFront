@@ -1,0 +1,9 @@
+<div class="menu-container">
+  <div *ngFor="let item of menuItems" class="menu-card" (click)="navigateTo(item.ruta)">
+
+    <mat-icon aria-hidden="false" [fontIcon]="item.imagenRuta" class="menu-icon"></mat-icon>
+    {{ item.nombreMenu }}
+    <hr>
+    {{ item.descripcion }}
+  </div>
+</div>

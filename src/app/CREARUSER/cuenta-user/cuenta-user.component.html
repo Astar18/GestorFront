@@ -1,0 +1,46 @@
+<!-- <div class="user-form-container"> -->
+  <!-- <div class="user-form-card"> -->
+    <p-card header="Crear Usuario" class="user-form-card">
+      <form class="user-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="cedula">Cédula</label>
+            <input id="cedula" type="text" pInputText placeholder="Ingrese la cédula" required [(ngModel)]="cedula" name="cedula" />
+          </div>
+          <div class="form-group">
+            <label for="identificacion">Código Colaborador</label>
+            <input id="identificacion" type="text" pInputText placeholder="Ingrese el Código del Colaborador" required [(ngModel)]="identificacion" name="identificacion" />
+          </div>
+          <div class="form-group">
+            <label for="nombres">Nombres</label>
+            <input id="nombres" type="text" pInputText placeholder="Ingrese los nombres" required [(ngModel)]="nombres" name="nombres" />
+          </div>
+          <div class="form-group">
+            <label for="apellidos">Apellidos</label>
+            <input id="apellidos" type="text" pInputText placeholder="Ingrese los apellidos" required [(ngModel)]="apellidos" name="apellidos" />
+          </div>
+          <div class="form-group">
+            <label for="sucursal">Sucursal</label>
+            <p-dropdown [options]="sucursales" placeholder="Seleccione una sucursal" inputId="sucursal" [(ngModel)]="sucursalId" name="sucursalId"></p-dropdown>
+          </div>
+          <div class="form-group">
+            <label for="rol">Rol</label>
+            <p-dropdown [options]="roles" placeholder="Seleccione un rol" inputId="rol" [(ngModel)]="rolId" name="rolId"></p-dropdown>
+          </div>
+          <div class="form-group">
+            <label for="correo">Correo</label>
+            <input id="correo" type="email" pInputText placeholder="Ingrese el correo" required [(ngModel)]="correo" name="correo" />
+          </div>
+          <div class="form-group">
+            <label for="contrasena">Contraseña</label>
+            <input id="contrasena" type="password" pInputText placeholder="Ingrese la contraseña" required [(ngModel)]="contrasena" name="contrasena" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label></label>
+          <button pButton type="button" label="Crear Usuario" icon="pi pi-check" (click)="crearUsuario()"></button>
+        </div>
+      </form>
+    </p-card>
+  <!-- </div> -->
+<!-- </div> -->

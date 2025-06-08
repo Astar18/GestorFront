@@ -1,0 +1,75 @@
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: 20px;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+  max-width: 50%;
+}
+
+.form-card {
+  flex: 1 1 300px;
+}
+
+.table-card {
+  flex: 1 1 300px;
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 100%;
+  }
+}
+
+
+/* diseño text area */
+
+.styled-textarea-container {
+  position: relative;
+  margin: 10px 0;
+}
+
+.labeltextArea{
+  font-size: 17px;
+}
+
+.butDesc{
+  position: absolute;
+  background-color: #326ba5;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+
+.butUpload{
+  border-color: transparent;
+  background-color: transparent;
+  box-shadow: #636363 0px 2px 2px 2px;
+  border-radius: 14px;
+}
+.butUpload:hover{
+  background-color: rgb(206, 206, 206);
+  border-color: transparent;
+  border-radius: 14px;
+}
+::ng-deep  .p-select{
+  width: 100% !important;
+}
+::ng-deep .p-datepicker{
+  width: 100% !important;
+  display: flex !important;
+}
+::ng-deep .p-button{
+  width: 100% !important;
+}

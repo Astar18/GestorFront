@@ -1,0 +1,38 @@
+.containerSK{
+  width: 100%;
+
+  left: 0;
+  right: 0;
+
+
+}
+.container app-navbar-cajas{
+  display: block;
+  margin-bottom: 9.5px;
+}
+
+.container app-skeleton-cajas{
+  margin-bottom: 0;
+    width: 100%;
+}
+.no-permission-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  font-size: 1.2rem;
+  max-width: 400px;
+  width: 90%;
+}
+
+.no-permission-message p {
+  margin: 0;
+}

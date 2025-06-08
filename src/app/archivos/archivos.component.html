@@ -1,0 +1,22 @@
+<p-table [value]="data" [responsiveLayout]="'scroll'" class="p-datatable-sm">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Políticas</th>
+      <th>Noticia</th>
+      <th>Formato</th>
+
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-row>
+    <tr>
+      <td>{{ row.politicas }}</td>
+      <td>{{ row.noticia }}</td>
+
+      <td>
+        <button  type="button"  class="butDescarga" (click)="download(row)">
+          <mat-icon aria-hidden="false" fontIcon="download" class="menu-icon"></mat-icon>
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

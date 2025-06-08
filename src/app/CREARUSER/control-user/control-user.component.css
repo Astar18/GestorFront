@@ -1,0 +1,9 @@
+.control-container {
+  padding: 20px;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}

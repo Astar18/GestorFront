@@ -1,0 +1,161 @@
+/* Contenedor principal: flex para que las tarjetas se pongan una al lado de la otra y envuelvan */
+.menu-container {
+  display: flex;
+  flex-wrap: wrap; /* Permite que las tarjetas salten a la siguiente línea en pantallas pequeñas */
+  gap: 1rem; /* Espacio entre las tarjetas. Usamos rem para mejor responsiveness */
+  padding: 1rem; /* Espacio alrededor del contenedor */
+  justify-content: center; /* Centra las tarjetas en la línea si no ocupan todo el ancho */
+  align-items: flex-start; /* Alinea las tarjetas al inicio si tienen diferentes alturas */
+}
+
+/* Estilo de cada tarjeta de menú */
+.menu-card {
+  display: flex;
+  flex-direction: column; /* Organiza el contenido (icono, nombre, hr, descripción) en columna */
+  align-items: center; /* Centra horizontalmente los elementos dentro de la tarjeta */
+  /* justify-content: center; Eliminamos esto para permitir que el contenido se distribuya naturalmente en altura */
+  padding: 1.5rem; /* Espacio interno de la tarjeta. Usamos rem */
+  border: 2px solid #cac9c9; /* Borde ligero */
+  border-radius: 8px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia el cursor al pasar por encima */
+  width: 50%; /* Ancho para que quepan dos tarjetas por fila (aproximadamente 48% * 2 + gap) */
+  /* max-height: 500px; Eliminamos alturas fijas para que el contenido defina la altura */
+  /* height: 80%; Eliminamos alturas fijas */
+  text-align: center; /* Centra el texto */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease; /* Transiciones suaves al pasar el ratón */
+  background-color: #fff; /* Fondo blanco por defecto */
+  color: #000; /* Color de texto negro por defecto */
+  box-sizing: border-box; /* Asegura que el padding no aumente el ancho total */
+  flex-grow: 1; /* Permite que las tarjetas crezcan un poco si hay espacio extra, útil con minmax */
+  flex-basis: 450px; /* Sugerencia de ancho base para flexbox, útil con flex-wrap */
+  max-width: 550px; /* Opcional: Limita el ancho máximo de la tarjeta */
+}
+
+/* Estilo del icono contenedor (si lo necesitas para espaciado, pero el estilo principal va en mat-icon) */
+.menu-icon {
+   margin-bottom: 0.5rem; /* Espacio debajo del icono */
+   /* Las propiedades de display, tamaño de fuente, etc., las aplicaremos directamente al mat-icon */
+}
+
+/* Estilo del icono de Material (mat-icon) dentro de la tarjeta */
+/* Usamos la especificidad para asegurar que este estilo se aplique */
+.menu-card mat-icon {
+  /* Eliminamos ::ng-deep si podemos aplicar estilos directamente */
+  font-size: 35px; /* Tamaño del icono por defecto (ajustaremos en media queries) */
+  /* color: #003366; */
+  color: #002b56;
+  transition: color 0.3s ease; /* Transición suave para el cambio de color del icono */
+  /* Asegúrate de que el tamaño se maneje solo por font-size, no por width/height en el icono */
+   width: 100%; /* Dejar que el tamaño sea definido por font-size */
+   height: 100%; /* Dejar que el tamaño sea definido por font-size */
+   display: flex; /* A veces ayuda con la alineación */
+}
+
+
+/* Estilo del separador HR */
+.menu-card hr {
+  width: 80%; /* Ancho de la línea separadora */
+  border: none; /* Elimina el borde por defecto */
+  height: 2px; /* Grosor de la línea */
+  background-color: #656565; /* Color de la línea (un gris claro) */
+  margin: 0.5rem auto; /* Espacio arriba y abajo de la línea, auto centra horizontalmente */
+  &:hover{
+    background-color: #ffffff;
+  }
+}
+
+
+/* Estado al pasar el ratón sobre la tarjeta */
+.menu-card:hover {
+  transform: translateY(-5px); /* Efecto de levantar la tarjeta ligeramente */
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+  background-color: #003366; /* Fondo azul oscuro al pasar el ratón (ejemplo, ajusta al de la foto) */
+  color: #fff; /* Color de texto blanco al pasar el ratón */
+}
+
+/* Color del icono al pasar el ratón sobre la tarjeta */
+.menu-card:hover mat-icon {
+  color: #fff; /* Icono blanco al pasar el ratón */
+}
+
+/* Estilo al hacer click (opcional) */
+.menu-card:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* -- Responsiveness -- */
+
+/* Ajuste de tamaño del icono en función del ancho de la vista */
+/* Esto hace que el icono sea responsive */
+.menu-card mat-icon {
+  font-size: 5vw; /* Empieza con un tamaño basado en el 8% del ancho de la vista */
+  max-width: 80px; /* Limita el tamaño máximo del icono para que no sea gigante en pantallas grandes */
+  max-height: 80px; /* Limita la altura máxima */
+}
+@media (max-width: 1200px) {
+  .menu-card mat-icon {
+    font-size: 10vw; /* Aumenta el tamaño del icono en pantallas más pequeñas */
+    max-width: 110px; /* Ajusta el máximo si lo aumentaste */
+    max-height: 110px; /* Ajusta el máximo si lo aumentaste */
+  }
+}
+
+/* Media Query para pantallas medianas (por ejemplo, tablets en vertical) */
+@media (max-width: 768px) {
+  .menu-card {
+    width: 90%; /* Permite que solo haya una tarjeta por fila en la mayoría de tablets */
+    flex-basis: auto; /* Desactiva la base fija de flex */
+    font-size: 1.1rem; /* Ajusta el tamaño de fuente */
+    padding: 1.2rem; /* Ajusta el padding */
+  }
+  .menu-card mat-icon {
+     font-size: 10vw; /* Aumenta el tamaño del icono en pantallas medianas */
+     max-width: 100px; /* Ajusta el máximo si lo aumentaste */
+     max-height: 100px; /* Ajusta el máximo si lo aumentaste */
+  }
+   .menu-card hr {
+    margin: 0.8rem auto; /* Ajusta el margen del separador */
+  }
+}
+
+/* Media Query para pantallas pequeñas (móviles) */
+@media (max-width: 480px) {
+  .menu-container {
+     gap: 0.8rem; /* Reduce el espacio entre tarjetas */
+     padding: 0.8rem; /* Reduce el padding del contenedor */
+  }
+  .menu-card {
+    width: 95%; /* Casi ancho completo en móviles */
+    padding: 1rem; /* Ajusta el padding */
+    font-size: 1rem; /* Ajusta el tamaño de fuente */
+  }
+   .menu-card mat-icon {
+     font-size: 20vw; /* Tamaño del icono más grande en móviles */
+     max-width: 120px; /* Ajusta el máximo si lo aumentaste */
+     max-height: 120px; /* Ajusta el máximo si lo aumentaste */
+  }
+    .menu-card hr {
+    margin: 0.6rem auto; /* Ajusta el margen del separador */
+  }
+}
+
+/* Eliminamos las media queries antiguas y sobre-específicas */
+/* @media (max-width: 844px) { ... } */
+/* @media (max-width: 715px) { ... } */
+/* @media (max-width: 664px) { ... } */
+/* @media (max-width: 494px) { ... } */
+
+/* Estilos opcionales para los textos si no quieres que hereden el color de la tarjeta */
+/* Puedes dirigirte a ellos así: */
+/*
+.menu-card h2 { // Si usas h2 para el nombre del menu
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: inherit; // Hereda el color de la tarjeta (negro o blanco)
+}
+.menu-card p { // Si usas p para la descripcion
+    font-size: 0.9rem;
+    color: inherit; // Hereda el color de la tarjeta
+}
+*/

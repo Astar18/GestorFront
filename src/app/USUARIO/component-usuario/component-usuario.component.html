@@ -1,0 +1,86 @@
+<p-card header="Crear Usuario">
+  <form [formGroup]="usuarioForm">
+    <div class="custom-grid">
+
+      <!-- Fila 1: 3 inputs -->
+      <div class="custom-field">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" pInputText formControlName="nombre" />
+      </div>
+
+      <div class="custom-field">
+        <label for="apellido">Apellido</label>
+        <input id="apellido" pInputText formControlName="apellido" />
+      </div>
+
+      <div class="custom-field">
+        <label for="cedula">Cédula</label>
+        <input id="cedula" pInputText formControlName="cedula" />
+      </div>
+
+      <!-- Fila 2: 3 inputs -->
+      <div class="custom-field">
+        <label for="sucursalId">Sucursal</label>
+        <p-treeSelect
+          id="sucursalId"
+          formControlName="sucursalId"
+          [options]="sucursales"
+          optionLabel="nombre"
+          optionValue="data"
+          placeholder="Seleccionar Sucursal">
+        </p-treeSelect>
+      </div>
+
+      <div class="custom-field">
+        <label for="identificacion">Identificación</label>
+        <input id="identificacion" pInputText formControlName="identificacion" />
+      </div>
+
+      <div class="custom-field">
+        <label for="correo">Correo</label>
+        <input id="correo" pInputText formControlName="correo" />
+      </div>
+
+      <!-- Fila 3: 3 inputs -->
+      <div class="custom-field">
+        <label for="contraseña">Contraseña</label>
+        <input id="contraseña" pPassword formControlName="contraseña" />
+      </div>
+
+      <div class="custom-field">
+        <label for="perfilId">Perfil</label>
+        <p-treeSelect
+          id="perfilId"
+          formControlName="perfilId"
+          [options]="perfiles"
+          optionLabel="label"
+          optionValue="data"
+          placeholder="Seleccionar Perfil">
+        </p-treeSelect>
+      </div>
+
+      <div class="custom-field">
+        <label for="estadoCuenta">Estado de Usuario</label>
+        <p-treeSelect
+          id="estadoCuenta"
+          [options]="estadosUsuario"
+          formControlName="estadoCuenta"
+          selectionMode="single"
+          optionLabel="label"
+          optionValue="data"
+          placeholder="Seleccionar Estado">
+        </p-treeSelect>
+      </div>
+
+
+
+      <!-- Botón de acción -->
+      <div class="custom-button">
+        <button pButton type="button" label="Crear Usuario" (click)="crearUsuario()"></button>
+      </div>
+
+    </div>
+  </form>
+</p-card>
+
+<p-toast></p-toast>
