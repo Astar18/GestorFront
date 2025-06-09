@@ -37,7 +37,7 @@ export class CajaGeneralService {
       ...cajaGeneral,
       cargadorId: Number(usuarioId),
       sucursalId: Number(sucursalId),
-      ingresadoPor: null, // Asegúrate de que esto esté definido correctamente
+      ingresadoPor: null,
       estado: 'Pendiente'
     };
 
@@ -81,4 +81,8 @@ export class CajaGeneralService {
     }
     return null;
   }
+  obtenerCajaGeneralFiltrado(filtro: any) {
+  return this.http.post<any>(`${this.apiUrl}/filtrar`, filtro);
+}
+
 }

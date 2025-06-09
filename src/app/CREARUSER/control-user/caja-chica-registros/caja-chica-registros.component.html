@@ -1,40 +1,112 @@
-<div class="stepper-content">
-  <div class="control-container">
-    <p-table [value]="cajaChicaData"
-   [paginator]="true"
-   [(first)]="firstChica"
-   [(rows)]="pageSize"
-   [totalRecords]="totalRecords"
-   (onPage)="onPageChangeChica($event)"
-   [loading]="loading"
-   [responsiveLayout]="'scroll'">
+<div class="card">
+  <h2>Gestión de Caja Chica</h2>
 
-      <ng-template pTemplate="header">
-        <tr>
-          <!-- <th>ID</th> -->
-          <th>Documento</th>
-          <th>Fecha de Creación</th>
-          <th>Estado Actual</th>
-          <th>Último Estado</th>
-          <th>Fecha Último Cambio</th>
-          <th>Usuario Cargador</th>
-          <th>Usuario Procesador</th>
-          <th>Sucursal</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-caja>
-        <tr>
-          <!-- <td>{{ caja.id }}</td> -->
-          <td>{{ caja.documentoNombre }}</td>
-          <td>{{ caja.fechaCreacion | date:'short' }}</td>
-          <td>{{ caja.estado }}</td>  <!-- Se asume que 'estado' es el estado actual -->
-          <td>{{ caja.ultimoEstado || 'No disponible' }}</td> <!-- Verificación por si es null -->
-          <td>{{ caja.fechaUltimoCambio ? (caja.fechaUltimoCambio | date:'short') : 'No disponible' }}</td> <!-- Verificación por si es null -->
-          <td>{{ caja.cargadorNombre }}</td>
-          <td>{{caja.usuarioCambioNombre}}</td>
-          <td>{{caja.sucursalNombre}}</td>
-        </tr>
-      </ng-template>
-    </p-table>
+  <div class="p-fluid p-formgrid p-grid p-jc-center">
+
+    <div class="contaPrinc">
+
+
+                <label for="documentoNombre"></label>
+                <input id="documentoNombre" placeholder="Nombre Documento" type="text" pInputText [(ngModel)]="filterParams.documentoNombre" (keyup.enter)="applyFilters()">
+
+
+
+
+                <p-select id="estado" [options]="estados" [(ngModel)]="filterParams.estado" placeholder="Seleccione un estado" optionLabel="label" optionValue="value" (onChange)="applyFilters()"></p-select>
+
+                <p-select
+                    id="sucursal"
+                    [options]="sucursales"
+                    [(ngModel)]="filterParams.sucursalId"
+                    placeholder="Seleccione una sucursal"
+                    optionLabel="nombre"
+                    optionValue="id"
+                    (onChange)="applyFilters()">
+                </p-select>
+
+                <!-- <p-dropdown
+                    id="cargadorId"
+                    [options]="usuarios"
+                    [(ngModel)]="filterParams.cargadorId"
+                    placeholder="Seleccione un cargador"
+                    optionLabel="apellido"
+                    optionValue="id"
+                    (onChange)="applyFilters()">
+                </p-dropdown> -->
+
+
+
+
+
+                <!-- <p-dropdown
+                    id="ingresadoPor"
+                    [options]="usuarios"
+                    [(ngModel)]="filterParams.ingresadoPor"
+                    placeholder="Ingresado Por"
+                    optionLabel="nombre"
+                    optionValue="id"
+                    (onChange)="applyFilters()">
+                </p-dropdown> -->
+
+    </div>
+    <br>
+    <div class="contaPrinc">
+
+      <p-calendar id="fechaDesde" placeholder="Desde" [(ngModel)]="filterParams.fechaCreacionDesde" dateFormat="dd/mm/yy" [showIcon]="true" ></p-calendar>
+                    <br>
+                    <p-calendar id="fechaHasta" placeholder="Hasta" [(ngModel)]="filterParams.fechaCreacionHasta" dateFormat="dd/mm/yy" [showIcon]="true" ></p-calendar>
+    </div>
+<br>
+    <div class="contaPrinc">
+      <p-button label="Buscar" icon="pi pi-search" (click)="applyFilters()" styleClass="p-button-raised p-button-primary p-mr-2"></p-button>
+      <p-button label="Limpiar Filtros" icon="pi pi-times" (click)="clearFilters()" styleClass="p-button-outlined p-button-secondary"></p-button>
+    </div>
   </div>
+
+  <p-divider></p-divider>
+
+  <p-table
+    [value]="cajaChicas"
+    [lazy]="true"
+    (onLazyLoad)="loadCajaChicas($event)"
+    [paginator]="true"
+    [rows]="filterParams.pageSize"
+    [totalRecords]="totalRecords"
+    [loading]="loading"
+    [rowsPerPageOptions]="[5,10,20,50]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+    [rowHover]="true"
+    dataKey="id">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="documentoNombre">Documento</th>
+        <th pSortableColumn="sucursalId">Sucursal</th>
+        <th pSortableColumn="fechaCreacion">Fecha Creación</th>
+        <th pSortableColumn="numeroComprobante">Comprobante</th>
+        <th pSortableColumn="estado">Estado</th>
+        <th pSortableColumn="ingresadoPor">Ingresado Por</th>
+        <th pSortableColumn="cargadorId">Cargador</th>
+        <th>Fecha Cambio</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-cajaChica>
+      <tr>
+        <td>{{ cajaChica.documentoNombre }}</td>
+        <td>{{ getSucursalNombre(cajaChica.sucursalId) }}</td>
+        <td>{{ cajaChica.fechaCreacion | date:'dd/MM/yyyy' }}</td>
+        <td>{{ cajaChica.numeroComprobante }}</td>
+        <td>{{ cajaChica.estado }}</td>
+        <td>{{ getUsuarioCambioEstadoNombre(cajaChica) }}</td>
+        <td>{{ getUsuarioNombre(cajaChica.cargadorId) }}</td>
+         <td>{{ getFechaCambioEstado(cajaChica) | date:'dd/MM/yyyy HH:mm' }}</td>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8">No se encontraron registros de Caja Chica.</td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>

@@ -1,0 +1,73 @@
+/* src/app/caja-chica-registros/caja-chica-registros.component.css */
+
+/* Estilos para el contenedor principal de la tarjeta, si es necesario */
+.card {
+    background: var(--surface-card); /* Color de fondo de la tarjeta PrimeNG */
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem; /* Espacio debajo de la tarjeta */
+}
+.contaPrinc
+{
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--text-color); /* Color de texto PrimeNG */
+}
+
+/* PrimeFlex ya maneja la mayoría del layout con sus clases.
+   Solo necesitas estilos adicionales si quieres sobrescribir o añadir algo específico. */
+
+/* Ejemplo: Ajustar el espaciado entre elementos de formulario si p-gap no es suficiente */
+.p-field {
+    margin-bottom: 1.5rem; /* Espacio entre cada campo de formulario */
+}
+
+/* Ajuste para los calendarios para que llenen el espacio disponible dentro de su contenedor flex */
+.p-calendar.p-flex-1 {
+    flex-grow: 1;
+}
+
+/* Espaciado para los botones si no usas p-mr-2 directamente */
+.p-button.p-mr-2 {
+    margin-right: 0.5rem; /* Ajuste de espaciado entre botones */
+}
+
+/* Estilos de la tabla, si necesitas ajustes visuales adicionales */
+.p-datatable {
+    border-radius: 10px;
+    overflow: hidden; /* Para que los bordes redondeados se apliquen bien */
+}
+
+/* Puedes añadir más estilos para las celdas, encabezados, etc. si lo deseas */
+.p-datatable .p-datatable-header,
+.p-datatable .p-datatable-footer {
+    background: var(--surface-ground);
+    color: var(--text-color-secondary);
+}
+
+/* .p-datatable .p-datatable-thead > tr > th {
+    background: var(--surface-hover); /* Fondo para encabezados de tabla */
+    /* color: var(--text-color);
+    font-weight: 600;
+} */
+
+.p-datatable .p-datatable-tbody > tr > td {
+    border-top: 1px solid var(--surface-border);
+    padding: 0.75rem;
+}
+
+/* Si quieres un estilo diferente para filas impares/pares */
+.p-datatable .p-datatable-tbody > tr:nth-child(even) {
+    background-color: var(--surface-0);
+}
+.p-datatable .p-datatable-tbody > tr:nth-child(odd) {
+    background-color: var(--surface-50);
+}

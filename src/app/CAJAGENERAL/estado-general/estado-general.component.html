@@ -1,5 +1,15 @@
-<p-toast />
-<p-table [value]="documentos" [scrollable]="true" scrollHeight="400px">
+<p-toast></p-toast>
+
+<p-table
+  [value]="documentos"
+  [lazy]="true"
+  (onLazyLoad)="cargarDocumentosConRutaLazy($event)"
+  [paginator]="true"
+  [rows]="10"
+  [totalRecords]="totalRegistros"
+  [loading]="cargando"
+  [scrollable]="true"
+>
   <ng-template pTemplate="header">
     <tr>
       <th>Comprobante</th>
@@ -9,14 +19,72 @@
       <th>Comentario Procesador</th>
       <th>Estado</th>
     </tr>
+    <tr class="filtros-container">
+      <th class="filtro-item">
+        <input type="text" pInputText [(ngModel)]="filtros.numeroComprobante"(input)="onFiltroChange()"placeholder="Buscar comprobante"/>
+      </th>
+      <th class="filtro-item">
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="filtros.nombreDocumento"
+          (input)="onFiltroChange()"
+          placeholder="Buscar documento"
+        />
+      </th>
+      <th class="filtro-item">
+        <div class="fecha-filtros">
+          <p-calendar appendTo="body"
+            [(ngModel)]="filtros.fechaInicio"
+            (onSelect)="onFiltroChange()"
+            placeholder="Desde"
+            dateFormat="yy-mm-dd"
+          ></p-calendar>
+          <p-calendar
+            [(ngModel)]="filtros.fechaFin"
+            (onSelect)="onFiltroChange()"
+            placeholder="Hasta"
+            dateFormat="yy-mm-dd"
+          ></p-calendar>
+        </div>
+      </th>
+      <th class="filtro-item">
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="filtros.comentarioCargador"
+          (input)="onFiltroChange()"
+          placeholder="Buscar cargador"
+        />
+      </th>
+      <th class="filtro-item">
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="filtros.comentario"
+          (input)="onFiltroChange()"
+          placeholder="Buscar procesador"
+        />
+      </th>
+      <th class="filtro-item">
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="filtros.estado"
+          (input)="onFiltroChange()"
+          placeholder="Estado"
+        />
+      </th>
+    </tr>
   </ng-template>
+
   <ng-template pTemplate="body" let-documento>
     <tr>
-      <td>{{documento.numeroComprobante}}</td>
+      <td>{{ documento.numeroComprobante }}</td>
       <td>{{ documento.nombreDocumento }}</td>
       <td>{{ documento.fechaCreacion | date }}</td>
-      <td>{{documento.comentarioCargador}}</td>
-      <td>{{documento.comentario}}</td>
+      <td>{{ documento.comentarioCargador }}</td>
+      <td>{{ documento.comentario }}</td>
       <td>{{ documento.estado }}</td>
     </tr>
   </ng-template>

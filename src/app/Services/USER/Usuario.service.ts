@@ -50,6 +50,52 @@ export interface CajaGeneralDTO {
   usuarioCambioNombre: string;
   sucursalNombre: string;
 }
+export interface CajaGeneralEstado {
+  id: number;
+  cajaGeneralId: number;
+  usuarioCambioId: number;
+  fechaCambio: string; // La fecha viene como string del backend
+  nuevoEstado: string;
+}
+export interface CajaChicaEstado {
+  id: number;
+  cajaChicaId: number;
+  usuarioCambioId: number;
+  fechaCambio: string; // La fecha viene como string del backend
+  nuevoEstado: string;
+}
+
+// Interfaz principal para un registro de Caja General
+export interface CajaGeneral {
+  id: number;
+  nombreDocumento: string;
+  rutaArchivo: string;
+  sucursalId: number;
+  fechaCreacion: string; // La fecha viene como string del backend
+  cargadorId: number;
+  ingresadoPor: number | null; // Puede ser null
+  comentario: string;
+  comentarioCargador: string;
+  numeroComprobante: string;
+  estado: string;
+  estados: CajaGeneralEstado[]; // ¡Esta es la propiedad que faltaba!
+}
+export interface CajaGeneralFilterParams extends PaginationParams {
+  sortField?: string; // Es mejor práctica usar 'string' en lugar de 'any'
+  sortOrder?: number; // 1 para ascendente, -1 para descendente
+  nombreDocumento?: string;
+  sucursalId?: number;
+  fechaCreacionDesde?: Date;
+  fechaCreacionHasta?: Date;
+  cargadorId?: number;
+  ingresadoPor?: number;
+  numeroComprobante?: string;
+  estado?: string;
+  usuarioCambioEstadoId?: number;
+  fechaCambioEstadoDesde?: Date;
+  fechaCambioEstadoHasta?: Date;
+}
+
 export interface PagedCajaGeneralResponse {
   data: CajaGeneralDTO[];
   totalItems: number;
@@ -57,13 +103,39 @@ export interface PagedCajaGeneralResponse {
   pageSize: number;
   totalPages: number;
 }
+// src/app/models/caja-chica.model.ts
+export interface CajaChica {
+  id: number;
+  documentoNombre: string;
+  rutaArchivo: string;
+  sucursalId: number;
+  fechaCreacion: Date;
+  ingresadoPor: number;
+  cargadorId: number;
+  numeroComprobante: string;
+  comentarioCargador?: string;
+  estado: string;
+  comentario?: string;
+  estados: CajaChicaEstado[];
+}
+export interface PaginationParams {
+  pageNumber: number;
+  pageSize: number;
+}
+export interface PagedResult<T> {
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalCount: number;
+  items: T[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
   private apiUrl = `${environment.apiUrl}/usuario/crear`;
-  private Filtro = `${environment.apiUrl}`;
+  private FiltroC = `${environment.apiUrl}/usuario`;
   private apiUrlObtener = `${environment.apiUrl}/usuario/obtener-usuarios`;
   private apiUrlActualizarEstado = `${environment.apiUrl}/usuario/actualizar-estado`;
   private apiUrlIniciarSesion = `${environment.apiUrl}/usuario/iniciar-sesion`;
@@ -108,47 +180,36 @@ obtenerCatalogosUsuario(): Observable<CatalogoUsuarioDTO> {
   const url = `${environment.apiUrl}/usuario/catalogos`;
   return this.http.get<CatalogoUsuarioDTO>(url);
 }
-obtenerCajaChicaConEstado(params: {
-  sucursalId?: number;
-  estado?: string;
-  desde?: Date;
-  hasta?: Date;
-  page?: number;
-  pageSize?: number;
-}): Observable<{ data: CajaChicaDTO[]; total: number }> {
-  let queryParams: string[] = [];
-
-  if (params.sucursalId != null) queryParams.push(`sucursalId=${params.sucursalId}`);
-  if (params.estado) queryParams.push(`estado=${encodeURIComponent(params.estado)}`);
-  if (params.desde) queryParams.push(`desde=${params.desde.toISOString()}`);
-  if (params.hasta) queryParams.push(`hasta=${params.hasta.toISOString()}`);
-  queryParams.push(`pageNumber=${params.page ?? 1}`);
-  queryParams.push(`pageSize=${params.pageSize ?? 10}`);
-
-  const url = `${environment.apiUrl}/usuario/caja-chica/filtrada?${queryParams.join('&')}`;
-  return this.http.get<{ data: CajaChicaDTO[]; total: number }>(url);
-}
-obtenerCajaGeneralConEstado(params: {
-  sucursalId?: number;
-  estado?: string;
-  desde?: Date;
-  hasta?: Date;
-  page?: number;
-  pageSize?: number;
-}): Observable<PagedCajaGeneralResponse> { // <--- Changed this line
-  let queryParams: string[] = [];
-
-  if (params.sucursalId != null) queryParams.push(`sucursalId=${params.sucursalId}`);
-  if (params.estado) queryParams.push(`estado=${encodeURIComponent(params.estado)}`);
-  if (params.desde) queryParams.push(`desde=${params.desde.toISOString()}`);
-  if (params.hasta) queryParams.push(`hasta=${params.hasta.toISOString()}`);
-  queryParams.push(`pageNumber=${params.page ?? 1}`);
-  queryParams.push(`pageSize=${params.pageSize ?? 10}`);
-
-  const url = `${environment.apiUrl}/usuario/caja-general/estados?${queryParams.join('&')}`;
-  return this.http.get<PagedCajaGeneralResponse>(url); // <--- Changed this line
-}
 
 
 
+
+getCajaChicasFilteredAndPaginated(filterParams: PaginationParams): Observable<PagedResult<CajaChica>> {
+    // Para una petición POST, los parámetros se envían en el cuerpo
+    // La URL debe ser la del endpoint POST, por ejemplo: /api/CajaChica/filtered-paginated
+    return this.http.post<PagedResult<CajaChica>>(`${this.FiltroC}/filtered-paginated`, filterParams);
+  }
+  obtenerTodasLasSucursales(): Observable<{ id: number; codigoSucursal: string; nombre: string }[]> {
+    const url = `${environment.apiUrl}/usuario/sucursales`;
+    return this.http.get<{ id: number; codigoSucursal: string; nombre: string }[]>(url);
+  }
+  obtenerUsuariosG(): Observable<Usuario[]> {
+    const url = `${environment.apiUrl}/usuario/usuariosTodos`;
+    return this.http.get<Usuario[]>(url);
+  }
+  getCajaGeneralFilteredAndPaginated(params: CajaGeneralFilterParams): Observable<PagedResult<CajaGeneral>> {
+    const paramsToSend: any = { ...params }; // Crear una copia para no modificar el original
+    if (paramsToSend.fechaCreacionDesde) {
+      paramsToSend.fechaCreacionDesde = paramsToSend.fechaCreacionDesde.toISOString();
+    }
+    if (paramsToSend.fechaCreacionHasta) {
+      paramsToSend.fechaCreacionHasta = paramsToSend.fechaCreacionHasta.toISOString();
+    }
+    if (paramsToSend.sucursalId === 0) paramsToSend.sucursalId = undefined;
+    if (paramsToSend.cargadorId === 0) paramsToSend.cargadorId = undefined;
+    if (paramsToSend.ingresadoPor === 0) paramsToSend.ingresadoPor = undefined;
+    if (paramsToSend.estado === '') paramsToSend.estado = undefined;
+
+    return this.http.post<PagedResult<CajaGeneral>>(`${this.FiltroC}/filtered-paginatedCajaGeneral`, paramsToSend);
+  }
 }

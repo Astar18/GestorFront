@@ -1,0 +1,14 @@
+.card {
+    background: var(--surface-card); /* Color de fondo de la tarjeta PrimeNG */
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem; /* Espacio debajo de la tarjeta */
+}
+.contaPrinc
+{
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+
+}

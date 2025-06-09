@@ -1,40 +1,114 @@
-<div class="stepper-content">
-  <p-table [value]="cajaGeneralData"
-  [paginator]="true"
-  [lazy]="true"
-  [(first)]="firstGeneral"
-  [(rows)]="pageSize"
-  [totalRecords]="totalCajaGeneral"
-  (onPage)="onPageChangeGeneral($event)"
-  [loading]="loading"
-  [responsiveLayout]="'scroll'">
+<div class="card">
+  <h2>Gestión de Caja General</h2>
+
+  <!-- Sección de filtros con PrimeFlex Grid y diseño diagonal -->
+  <div class="p-fluid p-formgrid p-grid p-jc-center">
+
+    <!-- Primera Fila de Filtros: Nombre Documento, Sucursal, Estado -->
+
+        <div class="contaPrinc">
 
 
-<ng-template pTemplate="header">
-<tr>
-<th>Documento</th>
-<th>Fecha de Creación</th>
-<th>Estado Actual</th>
-<th>Último Estado</th>
-<th>Fecha Último Cambio</th>
-<th>Usuario Cargador</th>
-<th>Usuario Procesador</th>
-<th>Sucursal</th>
-</tr>
-</ng-template>
+                <input id="nombreDocumento" placeholder="Nombre Documento" type="text" pInputText [(ngModel)]="filterParams.nombreDocumento" (keyup.enter)="applyFilters()">
 
-<ng-template pTemplate="body" let-caja>
-<tr>
-<td>{{ caja.documentoNombre }}</td>
-<td>{{ caja.fechaCreacion | date:'short'}}</td>
-<td>{{ caja.estado }}</td>
-<td>{{ caja.ultimoEstado || 'No disponible' }}</td>
-<td>{{ caja.fechaUltimoCambio ? (caja.fechaUltimoCambio | date:'short') : 'No disponible' }}</td>
-<td>{{ caja.cargadorNombre }}</td>
-<td>{{ caja.usuarioCambioNombre }}</td>
-<td>{{ caja.sucursalNombre }}</td>
-</tr>
-</ng-template>
-</p-table>
+                <p-dropdown
+                    id="sucursal"
+                    [options]="sucursales"
+                    [(ngModel)]="filterParams.sucursalId"
+                    placeholder="Seleccione una sucursal"
+                    optionLabel="nombre"
+                    optionValue="id"
+                    (onChange)="applyFilters()">
+                </p-dropdown>
 
+                <p-dropdown id="estado" [options]="estados" [(ngModel)]="filterParams.estado" placeholder="Seleccione un estado" optionLabel="label" optionValue="value" (onChange)="applyFilters()"></p-dropdown>
+
+
+
+
+                    <!-- <p-dropdown
+                    id="ingresadoPor"
+                    [options]="usuarios"
+                    [(ngModel)]="filterParams.ingresadoPor"
+                    placeholder="Ingresado Por"
+                    optionLabel="apellido"
+                    optionValue="id"
+                    (onChange)="applyFilters()">
+                </p-dropdown> -->
+
+
+                <!-- <p-dropdown
+                    id="cargadorId"
+                    [options]="usuarios"
+                    [(ngModel)]="filterParams.cargadorId"
+                    placeholder="Seleccione un cargador"
+                    optionLabel="apellido"
+                    optionValue="id"
+                    (onChange)="applyFilters()">
+                </p-dropdown> -->
+                 <!-- <input id="numeroComprobante" placeholder="Número Comprobante" type="text" pInputText [(ngModel)]="filterParams.numeroComprobante" (keyup.enter)="applyFilters()"> -->
+
+
+    </div>
+    <br>
+    <div class="contaPrinc">
+      <p-calendar id="fechaDesde" placeholder="Desde" [(ngModel)]="filterParams.fechaCreacionDesde" dateFormat="dd/mm/yy" [showIcon]="true" class="p-flex-1"></p-calendar>
+                    <p-calendar id="fechaHasta" placeholder="Hasta" [(ngModel)]="filterParams.fechaCreacionHasta" dateFormat="dd/mm/yy" [showIcon]="true" class="p-flex-1"></p-calendar>
+    </div>
+
+<br>
+    <!-- Fila de botones de acción -->
+    <div class="contaPrinc">
+      <p-button label="Buscar" icon="pi pi-search" (click)="applyFilters()" styleClass="p-button-raised p-button-primary p-mr-2"></p-button>
+      <p-button label="Limpiar Filtros" icon="pi pi-times" (click)="clearFilters()" styleClass="p-button-outlined p-button-secondary"></p-button>
+    </div>
+  </div>
+
+  <p-divider></p-divider> <!-- Divisor visual entre filtros y tabla -->
+
+  <!-- Tabla de PrimeNG para mostrar los registros de Caja General -->
+  <p-table
+    [value]="cajaGenerales"
+    [lazy]="true"
+    (onLazyLoad)="loadCajaGenerales($event)"
+    [paginator]="true"
+    [rows]="filterParams.pageSize"
+    [totalRecords]="totalRecords"
+    [loading]="loading"
+    [rowsPerPageOptions]="[5,10,20,50]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+    [rowHover]="true"
+    dataKey="id">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="nombreDocumento">Documento</th>
+        <th pSortableColumn="sucursalId">Sucursal</th>
+        <th pSortableColumn="fechaCreacion">Fecha Creación</th>
+        <th pSortableColumn="numeroComprobante">Comprobante</th>
+        <th pSortableColumn="estado">Estado</th>
+        <th pSortableColumn="ingresadoPor">Ingresado Por</th>
+        <th pSortableColumn="cargadorId">Cargador</th>
+        <th>Fecha Cambio</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-cajaGeneral>
+      <tr>
+        <td>{{ cajaGeneral.nombreDocumento }}</td>
+        <td>{{ getSucursalNombre(cajaGeneral.sucursalId) }}</td>
+        <td>{{ cajaGeneral.fechaCreacion | date:'dd/MM/yyyy' }}</td>
+        <td>{{ cajaGeneral.numeroComprobante }}</td>
+        <td>{{ cajaGeneral.estado }}</td>
+        <td>{{ getUsuarioCambioEstadoNombre(cajaGeneral) }}</td>
+        <td>{{ getUsuarioNombre(cajaGeneral.cargadorId) }}</td>
+        <td>{{ getFechaCambioEstado(cajaGeneral) | date:'dd/MM/yyyy HH:mm' }}</td>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8">No se encontraron registros de Caja General.</td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>

@@ -14,6 +14,22 @@ export interface CajaChica {
   estado: string;
   comentarioCargador?: string;
 }
+export interface CajaChicaFiltroDto {
+  sucursalId: number;
+  numeroComprobante?: string;
+  documentoNombre?: string;
+  fechaInicio?: string;
+  comentario?: string;
+  comentarioCargador?: string;
+  estado?: string;
+}
+export interface RespuestaCajaChicaPaginada {
+  totalRegistros: number;
+  totalPaginas: number;
+  paginaActual: number;
+  datos: CajaChica[];
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +95,12 @@ export class CajaChicaService {
     }
     return null;
   }
+//   obtenerCajaChicaFiltrado(filtro: CajaChicaFiltroDto): Observable<CajaChica[]> {
+//   return this.http.post<CajaChica[]>(`${this.apiUrl}/filtrar`, filtro);
+// }
+obtenerCajaChicaFiltrado(filtro: CajaChicaFiltroDto): Observable<RespuestaCajaChicaPaginada> {
+  return this.http.post<RespuestaCajaChicaPaginada>(this.apiUrl + '/filtrar', filtro);
+}
 
 
 

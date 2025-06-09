@@ -18,6 +18,7 @@ export interface CajaChica {
     numeroComprobante: string;
     estado: string;
     comentario: string;
+    comentarioCargador?: string;
 }
 export interface CajaChicaConEstados {
   cajaChica: CajaChica;

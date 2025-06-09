@@ -30,6 +30,7 @@ export interface CajaGeneral {
   estado: string;
   comentario?: string;
   procesadorId?: number;
+  comentarioCargador?: string;
 }
 
 export interface CajaGeneralConEstados {
