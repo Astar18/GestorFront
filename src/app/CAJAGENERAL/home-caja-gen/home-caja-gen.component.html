@@ -3,5 +3,9 @@
 
   </div>
   <div class="containerSK">
-  <app-skeleton-caja-gen></app-skeleton-caja-gen>
+    <div *ngIf="!ControlPerfil">
+      <app-skeleton-caja-gen></app-skeleton-caja-gen>
+
+    </div>
+
   </div>

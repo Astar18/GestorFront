@@ -12,7 +12,7 @@ import { AuthGuard } from './Services/Guards/auth.guard';
 import { HomeGeneralPComponent } from './CAJAGENERALP/home-general-p/home-general-p.component';
 
 export const routes: Routes = [
-  {path:'nav',component:NavbarComponent},
+  // {path:'nav',component:NavbarComponent},
   {path:'login',component:LoginComponent},
   {path:'usuario',component:HomeCrearUserComponent,canActivate: [AuthGuard]},
   {path:'menu',component:HomeMenuComponent,canActivate: [AuthGuard]},

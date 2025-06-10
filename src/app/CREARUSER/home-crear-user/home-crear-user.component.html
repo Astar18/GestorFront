@@ -3,5 +3,8 @@
 
     </div>
     <div class="containerSK">
-    <app-skeleton-crear-user></app-skeleton-crear-user>
+      <div *ngIf="!ControlPerfil">
+        <app-skeleton-crear-user></app-skeleton-crear-user>
+      </div>
+
     </div>
