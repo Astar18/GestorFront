@@ -95,4 +95,19 @@ export class CajaGeneralPRCService {
       responseType: 'blob' // Para descargar el archivo como Blob
     });
   }
+  obtenerRegistrosFiltrados(
+    filtros: any,
+    paginacion: { pagina: number; tamanioPagina: number }
+  ): Observable<{ datos: CajaGeneralConEstados[]; totalRegistros: number }> {
+    const body = {
+      filtros,
+      paginacion
+    };
+
+    return this.http.post<{ datos: CajaGeneralConEstados[]; totalRegistros: number }>(
+      `${this.apiUrl}/filtrar-registros`,
+      body
+    );
+  }
+
 }

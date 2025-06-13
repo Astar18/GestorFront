@@ -47,6 +47,14 @@ export class CajaGeneralPComponent implements OnInit {
   visible: boolean = false;
   pdfUrl: SafeResourceUrl | null = null;
   loading: boolean = false;
+  totalRegistros: number = 0;
+paginaActual: number = 1;
+tamanioPagina: number = 10;
+filtroDocumento: string = '';
+filtroComentario: string = '';
+filtroEstado: string = '';
+estados: string[] = ['Pendiente', 'Aprobado', 'Rechazado'];
+
 
   constructor(
     private cajaGeneralPRCService: CajaGeneralPRCService,
@@ -75,6 +83,54 @@ export class CajaGeneralPComponent implements OnInit {
       this.messageService.add({severity:'error', summary:'Error', detail:'ID de perfil de usuario no válido.'});
     }
   }
+  onPageChange(event: any) {
+    this.paginaActual = event.page + 1;
+    this.tamanioPagina = event.rows;
+    this.buscarRegistrosFiltrados();
+  }
+  buscarRegistrosFiltrados(): void {
+    if (this.sucursalSeleccionada) {
+      const filtros: any = {
+        sucursalId: this.sucursalSeleccionada.id,
+        documento: this.filtroDocumento?.trim() || null,
+        comentario: this.filtroComentario?.trim() || null,
+        estado: this.filtroEstado || null,
+        fechaInicio: this.fechaInicio ? this.fechaInicio.toISOString() : null,
+        fechaFin: this.fechaFin ? this.fechaFin.toISOString() : null
+      };
+
+      const paginacion = {
+        pagina: this.paginaActual,
+        tamanioPagina: this.tamanioPagina
+      };
+
+      this.cajaGeneralPRCService.obtenerRegistrosFiltrados(filtros, paginacion).subscribe({
+        next: (response) => {
+          this.data = response.datos.map((item: CajaGeneralConEstados) => ({
+            id: item.cajaGeneral.id,
+            numeroComprobante: item.cajaGeneral.numeroComprobante,
+            documento: item.cajaGeneral.nombreDocumento,
+            archivo: item.cajaGeneral.rutaArchivo,
+            fechaCarga: item.cajaGeneral.fechaCreacion,
+            comentario: item.cajaGeneral.comentario,
+            usuario: item.nombreCargador,
+            estado: item.cajaGeneral.estado,
+            item: item.cajaGeneral,
+            comentarioCargador: item.cajaGeneral.comentarioCargador,
+          }));
+          this.totalRegistros = response.totalRegistros;
+        },
+        error: (error) => {
+          console.error('Error al obtener registros filtrados:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al buscar registros filtrados.' });
+        }
+      });
+    } else {
+      this.messageService.add({ severity: 'warn', summary: 'Advertencia', detail: 'Selecciona una sucursal para buscar.' });
+    }
+  }
+
+
 
   buscarRegistros() {
     if (this.sucursalSeleccionada && this.fechaInicio && this.fechaFin) {

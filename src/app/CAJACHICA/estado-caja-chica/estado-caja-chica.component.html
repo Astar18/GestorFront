@@ -38,7 +38,17 @@
       <td>{{ documento.fechaCreacion | date }}</td>
       <td>{{ documento.comentario }}</td>
       <td>{{ documento.comentarioCargador }}</td>
-      <td>{{ documento.estado }}</td>
+      <td id="estado-column"><div class="estado-tag">
+        {{ documento.estado }}
+        <button pButton type="button" class="p-button-rounded p-button-info"[loading]="loading"[disabled]="loading"
+                    (click)="mostrarPDF(documento)"><mat-icon aria-hidden="false" aria-label="icon" fontIcon="download"></mat-icon>
+            </button>
+      </div></td>
     </tr>
   </ng-template>
 </p-table>
+<p-dialog header="Visualizar PDF" [modal]="true" [(visible)]="visible" [style]="{ width: '95%', height: '100%' }">
+  <object *ngIf="pdfUrl" [data]="pdfUrl" type="application/pdf" width="100%" height="100%">
+    Tu navegador no soporta PDFs. <a [href]="pdfUrl" target="_blank">Haz clic aquí para ver el archivo.</a>
+  </object>
+</p-dialog>

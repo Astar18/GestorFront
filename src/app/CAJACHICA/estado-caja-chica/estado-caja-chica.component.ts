@@ -8,9 +8,15 @@ import { FormsModule } from '@angular/forms';
 import { debounceTime, Subject, Subscription } from 'rxjs';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
+import { MatIconModule } from '@angular/material/icon';
+import { CajaGeneralPRCService } from '../../Services/CajaGeneral/CajaGeneralPRC.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { DialogModule } from 'primeng/dialog';
 @Component({
     selector: 'app-estado-caja-chica',
-    imports: [TableModule, CommonModule,ToastModule,FormsModule,CalendarModule,InputTextModule],
+    imports: [TableModule, CommonModule,ToastModule,ButtonModule, MatIconModule, DialogModule,
+      FormsModule,CalendarModule,InputTextModule],
     templateUrl: './estado-caja-chica.component.html',
     styleUrl: './estado-caja-chica.component.css',
     providers:[MessageService]
@@ -18,6 +24,9 @@ import { InputTextModule } from 'primeng/inputtext';
 export class EstadoCajaChicaComponent implements OnInit, OnDestroy {
   documentosConRuta: CajaChica[] = [];
   selectedOption: any;
+  loading: boolean = false;
+  visible: boolean = false;
+  pdfUrl: SafeResourceUrl | null = null;
 
   filtros: any = {
     numeroComprobante: '',
@@ -33,7 +42,7 @@ export class EstadoCajaChicaComponent implements OnInit, OnDestroy {
 
   constructor(
     private cajaChicaService: CajaChicaService,
-    private messageService: MessageService
+    private messageService: MessageService,private cajaGeneralPRCService: CajaGeneralPRCService,private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
@@ -76,6 +85,23 @@ export class EstadoCajaChicaComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Error al cargar caja chica filtrada', error);
       }
+    });
+  }
+
+  mostrarPDF(documento: any) {
+    const rutaArchivo = documento.rutaArchivo;
+    if (!rutaArchivo) {
+      console.warn('No se encontró la ruta del archivo para este registro.');
+      return;
+    }
+    this.loading = true;
+    this.cajaGeneralPRCService.descargarArchivo(rutaArchivo).subscribe(blob => {
+      const fileURL = window.URL.createObjectURL(blob);
+      this.pdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
+      this.visible = true;
+      this.loading = false;
+    }, error => {
+      console.error('Error al cargar el archivo', error);
     });
   }
 }

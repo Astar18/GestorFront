@@ -17,9 +17,19 @@
       <button pButton type="button" label="Buscar" icon="pi pi-search" class="p-button-primary" (click)="buscarRegistros()"></button>
   </div>
   </div>
+  <div>
+    <input pInputText [(ngModel)]="filtroDocumento" placeholder="Filtrar por Documento" />
+    <input pInputText [(ngModel)]="filtroComentario" placeholder="Filtrar por Comentario" />
+    <p-select [options]="estados" [(ngModel)]="filtroEstado" placeholder="Filtrar por Estado"></p-select>
+
+    <button pButton type="button" label="Buscar" icon="pi pi-search" class="p-button-primary" (click)="buscarRegistrosFiltrados()"></button>
+  </div>
 
   <!-- Tabla -->
-  <p-table [value]="data" styleClass="p-datatable-striped">
+  <p-table [value]="data" [paginator]="true"
+  [rows]="tamanioPagina"
+  [totalRecords]="totalRegistros"
+  (onPage)="onPageChange($event)" styleClass="p-datatable-striped">
     <ng-template pTemplate="header">
         <tr>
             <th>Comprobante</th>

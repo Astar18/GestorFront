@@ -5,3 +5,17 @@
   align-content: center;
   align-items: center;
 }
+.estado-tag{
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  max-width: 60px;
+}
+::ng-deep .p-datatable-tbody > tr > td#estado-column
+{
+  display: grid;
+  justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+}
