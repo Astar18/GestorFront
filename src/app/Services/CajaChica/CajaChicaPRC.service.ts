@@ -7,6 +7,41 @@ export interface Sucursal {
     codigoSucursal: string;
     nombre: string;
 }
+export interface EstadoCajaChicaFilter {
+  id?: number;
+  cajaGeneralId?: number;
+  usuarioCambioId?: number;
+  fechaCambio?: Date;
+  nuevoEstado?: string;
+  nombreDocumento?: string;
+  numeroComprobante?: string;
+  estadoCaja?: string;
+}
+export interface PagedResponse {
+  estados: EstadoCajaChica2[] ; // Modifica esta línea
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+}
+export interface EstadoCajaChica2 {
+  id: number;
+  cajaChicalId: number;
+  usuarioCambioId: number;
+  usuario:string;
+  fechaCambio: string;
+  nuevoEstado: string;
+  cajaChicaId: number;
+  cajaChica_NombreDocumento: string;
+  cajaChica_RutaArchivo: string;
+  cajaChica_SucursalId: number;
+  cajaChica_FechaCreacion: string;
+  cajaChica_CargadorId: number;
+  cajaChica_IngresadoPor: number | null;
+  cajaChica_Comentario: string;
+  cajaChica_ComentarioCargador: string | null;
+  cajaChica_NumeroComprobante: string;
+  cajaChica_Estado: string;
+}
 export interface CajaChica {
     id: number;
     documentoNombre: string;
@@ -65,4 +100,15 @@ export class CajaChicaPRCService {
     const body = { cajaChicaId, procesadorId, comentario };
     return this.http.post(`${this.apiUrl}/EstadoCajaChica/aceptar`, body);
   }
+  getEstadosCajaGeneralPaginadoPost(
+      pageNumber: number,
+      pageSize: number,
+      filter: EstadoCajaChicaFilter
+    ): Observable<PagedResponse> {
+      const params = new HttpParams()
+        .set('pageNumber', pageNumber.toString())
+        .set('pageSize', pageSize.toString());
+
+      return this.http.post<PagedResponse>(`${this.apiUrl}/EstadoCajaChica/paginado`, filter, { params });
+    }
 }

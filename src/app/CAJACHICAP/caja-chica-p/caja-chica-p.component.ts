@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon'; // Usar MatIconModule en lugar de MatIcon
 import { SelectModule } from 'primeng/select';
-import { CajaChicaConEstados, CajaChicaPRCService, Sucursal } from '../../Services/CajaChica/CajaChicaPRC.service';
+import { CajaChicaConEstados, CajaChicaPRCService, EstadoCajaChicaFilter, PagedResponse, Sucursal } from '../../Services/CajaChica/CajaChicaPRC.service';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -48,9 +48,86 @@ export class CajaChicaPComponent implements OnInit {
   visible: boolean = false;
   pdfUrl: SafeResourceUrl | null = null;
   loading: boolean = false;
-
+  totalRegistros: number = 0;
+  paginaActual: number = 1;
+  tamanioPagina: number = 10;
+  filtroDocumento: string = '';
+  filtroComentario: string = '';
+  filtroEstado: string = '';
+filter: EstadoCajaChicaFilter = {};
+  estados: string[] = ['Pendiente', 'Aprobado', 'Rechazado'];
+  filtroId: number | null = null;
+  filtroCajaGeneralId: number | null = null;
+  filtroUsuarioCambioId: number | null = null;
+  filtroFechaCambio: Date | null = null;
+  filtroNuevoEstado: string = '';
+  filtroNombreDocumento: string = '';
+  filtroNumeroComprobante: string = '';
+  filtroEstadoCaja: string = '';
   showDialog() {
     this.visible = true;
+  }
+    cargarEstados(): void {
+    this.loading = true;
+    console.log('cargarEstados() llamado. Página actual:', this.paginaActual, 'Tamaño página:', this.tamanioPagina, 'Filtro:', this.filter);
+    this.cajaChicaPRCService.getEstadosCajaGeneralPaginadoPost(
+      this.paginaActual,
+      this.tamanioPagina,
+      this.filter // Pass the filter object
+    ).subscribe({
+      next: (response: PagedResponse) => {
+        console.log('Respuesta del servicio:', response);
+        if (response.estados && Array.isArray(response.estados)) {
+          this.data = response.estados.map(item => ({
+            id: item.id,
+            numeroComprobante: item.cajaChica_NumeroComprobante,
+            documento: item.cajaChica_NombreDocumento,
+            archivo: item.cajaChica_RutaArchivo,
+            fechaCarga: item.fechaCambio, // Ya es una DateTime en el DTO
+            comentarioCargador: item.cajaChica_ComentarioCargador,
+            comentario: item.cajaChica_Comentario,
+            usuario: item.usuario || '', // Usar el campo correcto del DTO
+            estado: item.nuevoEstado,
+            item: item, // Puedes pasar el DTO completo si lo necesitas
+            cajaGeneralId: item.cajaChicaId,
+            usuarioCambioId: item.usuarioCambioId,
+            nuevoEstado: item.nuevoEstado,
+            // cajaChica_Id: item.cajaChica_Id,
+            cajaChica_SucursalId: item.cajaChica_SucursalId,
+            cajaChica_FechaCreacion: item.cajaChica_FechaCreacion,
+            cajaChica_CargadorId: item.cajaChica_CargadorId,
+            cajaChica_IngresadoPor: item.cajaChica_IngresadoPor,
+          }));
+          console.log('Valor de this.data en next:', this.data);
+          console.log('Longitud de this.data:', this.data.length);
+          this.totalRegistros = response.totalPages * response.pageSize; // Backend returns total pages, so calculate total records
+        } else {
+          console.error('Formato de respuesta de estados inesperado:', response);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al procesar los estados (formato incorrecto).' });
+          this.data = [];
+        }
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar los estados de caja general', error);
+        console.log('Valor de this.data en error:', this.data);
+        this.loading = false;
+      }
+    });
+  }
+  filtrarPorCampos(): void {
+    this.filter = {
+      id: this.filtroId !== null ? this.filtroId : undefined,
+      cajaGeneralId: this.filtroCajaGeneralId !== null ? this.filtroCajaGeneralId : undefined,
+      usuarioCambioId: this.filtroUsuarioCambioId !== null ? this.filtroUsuarioCambioId : undefined,
+      fechaCambio: this.filtroFechaCambio !== null ? this.filtroFechaCambio : undefined,
+      nuevoEstado: this.filtroNuevoEstado,
+      nombreDocumento: this.filtroNombreDocumento,
+      numeroComprobante: this.filtroNumeroComprobante,
+      estadoCaja: this.filtroEstadoCaja
+    };
+    this.paginaActual = 1;
+    this.cargarEstados();
   }
 
   constructor(

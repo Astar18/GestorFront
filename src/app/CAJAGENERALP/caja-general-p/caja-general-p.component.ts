@@ -15,6 +15,10 @@ import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast'; // Importar ToastModule
 import { MessageService } from 'primeng/api'; // Importar MessageService
 import { DatePickerModule } from 'primeng/datepicker';
+import { EstadoCajaGeneralFilter, EstadoCajaGeneral,PagedResponse } from '../../Services/CajaGeneral/CajaGeneralPRC.service';
+
+
+
 @Component({
   selector: 'app-caja-general-p',
   imports: [
@@ -48,12 +52,23 @@ export class CajaGeneralPComponent implements OnInit {
   pdfUrl: SafeResourceUrl | null = null;
   loading: boolean = false;
   totalRegistros: number = 0;
-paginaActual: number = 1;
-tamanioPagina: number = 10;
-filtroDocumento: string = '';
-filtroComentario: string = '';
-filtroEstado: string = '';
-estados: string[] = ['Pendiente', 'Aprobado', 'Rechazado'];
+  paginaActual: number = 1;
+  tamanioPagina: number = 10;
+  filtroDocumento: string = '';
+  filtroComentario: string = '';
+  filtroEstado: string = '';
+  data2: EstadoCajaGeneral[] = [];
+
+  filter: EstadoCajaGeneralFilter = {};
+  estados: string[] = ['Pendiente', 'Aprobado', 'Rechazado'];
+  filtroId: number | null = null;
+  filtroCajaGeneralId: number | null = null;
+  filtroUsuarioCambioId: number | null = null;
+  filtroFechaCambio: Date | null = null;
+  filtroNuevoEstado: string = '';
+  filtroNombreDocumento: string = '';
+  filtroNumeroComprobante: string = '';
+  filtroEstadoCaja: string = '';
 
 
   constructor(
@@ -66,27 +81,83 @@ estados: string[] = ['Pendiente', 'Aprobado', 'Rechazado'];
     this.obtenerSucursalPerfil();
   }
 
-  obtenerSucursalPerfil() {
-    const perfilId = sessionStorage.getItem('perfilId');
-    if (perfilId && !isNaN(Number(perfilId))) {
-      this.cajaGeneralPRCService.obtenerSucursalesPorPerfilId(Number(perfilId)).subscribe(
-        (data) => {
-          this.sucursales = data;
-        },
-        (error) => {
-          console.error('Error al obtener sucursales:', error);
-          this.messageService.add({severity:'error', summary:'Error', detail:'Error al cargar sucursales.'});
-        }
-      );
-    } else {
-      console.error('perfilId no válido en sessionStorage.');
-      this.messageService.add({severity:'error', summary:'Error', detail:'ID de perfil de usuario no válido.'});
+  cargarEstados(): void {
+  this.loading = true;
+  console.log('cargarEstados() llamado. Página actual:', this.paginaActual, 'Tamaño página:', this.tamanioPagina, 'Filtro:', this.filter);
+  this.cajaGeneralPRCService.getEstadosCajaGeneralPaginadoPost(
+    this.paginaActual,
+    this.tamanioPagina,
+    this.filter // Pass the filter object
+  ).subscribe({
+    next: (response: PagedResponse) => {
+      console.log('Respuesta del servicio:', response);
+      if (response.estados && Array.isArray(response.estados)) {
+        this.data = response.estados.map(item => ({
+          id: item.id,
+          numeroComprobante: item.cajaGeneral_NumeroComprobante,
+          documento: item.cajaGeneral_NombreDocumento,
+          archivo: item.cajaGeneral_RutaArchivo,
+          fechaCarga: item.fechaCambio, // Ya es una DateTime en el DTO
+          comentarioCargador: item.cajaGeneral_ComentarioCargador,
+          comentario: item.cajaGeneral_Comentario,
+          usuario: item.usuario || '', // Usar el campo correcto del DTO
+          estado: item.nuevoEstado,
+          item: item, // Puedes pasar el DTO completo si lo necesitas
+          cajaGeneralId: item.cajaGeneralId,
+          usuarioCambioId: item.usuarioCambioId,
+          nuevoEstado: item.nuevoEstado,
+          cajaGeneral_Id: item.cajaGeneral_Id,
+          cajaGeneral_SucursalId: item.cajaGeneral_SucursalId,
+          cajaGeneral_FechaCreacion: item.cajaGeneral_FechaCreacion,
+          cajaGeneral_CargadorId: item.cajaGeneral_CargadorId,
+          cajaGeneral_IngresadoPor: item.cajaGeneral_IngresadoPor,
+        }));
+        console.log('Valor de this.data en next:', this.data);
+        console.log('Longitud de this.data:', this.data.length);
+        this.totalRegistros = response.totalPages * response.pageSize; // Backend returns total pages, so calculate total records
+      } else {
+        console.error('Formato de respuesta de estados inesperado:', response);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error al procesar los estados (formato incorrecto).' });
+        this.data = [];
+      }
+      this.loading = false;
+    },
+    error: (error) => {
+      console.error('Error al cargar los estados de caja general', error);
+      console.log('Valor de this.data en error:', this.data);
+      this.loading = false;
     }
+  });
+}
+
+  obtenerSucursalPerfil() {
+    // Verificar si sessionStorage está disponible
+    if (typeof sessionStorage !== 'undefined') {
+      const perfilId = sessionStorage.getItem('perfilId');
+      if (perfilId && !isNaN(Number(perfilId))) {
+        this.cajaGeneralPRCService.obtenerSucursalesPorPerfilId(Number(perfilId)).subscribe(
+          (response: Sucursal[]) => { // Cambia el tipo de 'response' a 'Sucursal[]'
+            this.sucursales = response; // Asigna directamente la respuesta a this.sucursales
+          },
+          (error) => {
+            console.error('Error al obtener sucursales:', error);
+            this.messageService.add({severity:'error', summary:'Error', detail:'Error al cargar sucursales.'});
+          }
+        );
+      } else {
+        console.error('perfilId no válido en sessionStorage.');
+        this.messageService.add({severity:'error', summary:'Error', detail:'ID de perfil de usuario no válido.'});
+      }
+    } else {
+    console.error('perfilId no válido en sessionStorage.');
+    this.messageService.add({severity:'error', summary:'Error', detail:'ID de perfil de usuario no válido.'});
   }
-  onPageChange(event: any) {
-    this.paginaActual = event.page + 1;
+}
+
+  onPageChange(event: any): void {
+    this.paginaActual = event.page + 1; // PrimeNG page index is 0-based
     this.tamanioPagina = event.rows;
-    this.buscarRegistrosFiltrados();
+    this.cargarEstados();
   }
   buscarRegistrosFiltrados(): void {
     if (this.sucursalSeleccionada) {
@@ -132,7 +203,7 @@ estados: string[] = ['Pendiente', 'Aprobado', 'Rechazado'];
 
 
 
-  buscarRegistros() {
+buscarRegistros() {
     if (this.sucursalSeleccionada && this.fechaInicio && this.fechaFin) {
       this.cajaGeneralPRCService.obtenerRegistrosPorSucursalYFechas(this.sucursalSeleccionada.id, this.fechaInicio, this.fechaFin).subscribe(
         (response) => {
@@ -235,13 +306,14 @@ estados: string[] = ['Pendiente', 'Aprobado', 'Rechazado'];
   }
 
   estaFechaMarcada(date: any): boolean {
-    const fechaComparar = new Date(date.year, date.month, date.day);
-    return this.fechasConRegistros.some(f =>
-      f.getFullYear() === fechaComparar.getFullYear() &&
-      f.getMonth() === fechaComparar.getMonth() &&
-      f.getDate() === fechaComparar.getDate()
-    );
-  }
+  const fechaComparar = new Date(date.year, date.month, date.day);
+  return this.fechasConRegistros.some(f => {
+    //console.log('Tipo de f en estaFechaMarcada:', typeof f, f); // Agrega esta línea
+    return f.getFullYear() === fechaComparar.getFullYear() &&
+           f.getMonth() === fechaComparar.getMonth() &&
+           f.getDate() === fechaComparar.getDate();
+  });
+}
 
   mostrarPDF(item: any) {
     const rutaArchivo = item.archivo;
@@ -272,5 +344,29 @@ estados: string[] = ['Pendiente', 'Aprobado', 'Rechazado'];
       window.URL.revokeObjectURL(this.pdfUrl as string);
       this.pdfUrl = null;
     }
+  }
+
+
+  // Example of how you might update the filter and reload data
+  aplicarFiltro(nombreDocumento: string): void {
+    this.filter.nombreDocumento = nombreDocumento;
+    this.paginaActual = 1; // Reset to the first page when applying a new filter
+    this.cargarEstados();
+
+  }
+
+  filtrarPorCampos(): void {
+    this.filter = {
+      id: this.filtroId !== null ? this.filtroId : undefined,
+      cajaGeneralId: this.filtroCajaGeneralId !== null ? this.filtroCajaGeneralId : undefined,
+      usuarioCambioId: this.filtroUsuarioCambioId !== null ? this.filtroUsuarioCambioId : undefined,
+      fechaCambio: this.filtroFechaCambio !== null ? this.filtroFechaCambio : undefined,
+      nuevoEstado: this.filtroNuevoEstado,
+      nombreDocumento: this.filtroNombreDocumento,
+      numeroComprobante: this.filtroNumeroComprobante,
+      estadoCaja: this.filtroEstadoCaja
+    };
+    this.paginaActual = 1;
+    this.cargarEstados();
   }
 }

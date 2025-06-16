@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class HomeCajaGenComponent implements OnInit {
   ControlPerfil: boolean = true;
+
   ngOnInit(): void {
     this.validacionPerfil();
   }

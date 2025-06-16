@@ -17,6 +17,25 @@ export interface EstadoCajaGeneral {
   nuevoEstado: string;
   comentario?: string;
 }
+export interface EstadoCajaGeneral2 {
+  id: number;
+  cajaGeneralId: number;
+  usuarioCambioId: number;
+  usuario:string;
+  fechaCambio: string;
+  nuevoEstado: string;
+  cajaGeneral_Id: number;
+  cajaGeneral_NombreDocumento: string;
+  cajaGeneral_RutaArchivo: string;
+  cajaGeneral_SucursalId: number;
+  cajaGeneral_FechaCreacion: string;
+  cajaGeneral_CargadorId: number;
+  cajaGeneral_IngresadoPor: number | null;
+  cajaGeneral_Comentario: string;
+  cajaGeneral_ComentarioCargador: string | null;
+  cajaGeneral_NumeroComprobante: string;
+  cajaGeneral_Estado: string;
+}
 
 export interface CajaGeneral {
   id: number;
@@ -38,11 +57,26 @@ export interface CajaGeneralConEstados {
   estadosCajaGeneral: EstadoCajaGeneral[];
   nombreCargador: string;
 }
-
+export interface PagedResponse {
+  estados: EstadoCajaGeneral2[] ; // Modifica esta línea
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+}
 export interface EstadoCajaGeneralAccionDto {
   cajaGeneralId: number;
   procesadorId: number;
   comentario?: string;
+}
+export interface EstadoCajaGeneralFilter {
+  id?: number;
+  cajaGeneralId?: number;
+  usuarioCambioId?: number;
+  fechaCambio?: Date;
+  nuevoEstado?: string;
+  nombreDocumento?: string;
+  numeroComprobante?: string;
+  estadoCaja?: string;
 }
 
 @Injectable({
@@ -108,6 +142,17 @@ export class CajaGeneralPRCService {
       `${this.apiUrl}/filtrar-registros`,
       body
     );
+  }
+  getEstadosCajaGeneralPaginadoPost(
+    pageNumber: number,
+    pageSize: number,
+    filter: EstadoCajaGeneralFilter
+  ): Observable<PagedResponse> {
+    const params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.post<PagedResponse>(`${this.apiUrl}/paginado`, filter, { params });
   }
 
 }
