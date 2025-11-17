@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { DatePipe, isPlatformBrowser } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { CajaGeneralConEstados, CajaGeneralPRCService, Sucursal } from '../../Services/CajaGeneral/CajaGeneralPRC.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -14,9 +14,8 @@ import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast'; // Importar ToastModule
 import { MessageService } from 'primeng/api'; // Importar MessageService
+import { EstadoCajaGeneralFilter, EstadoCajaGeneral,PagedResponse,FechaConEstados } from '../../Services/CajaGeneral/CajaGeneralPRC.service';
 import { DatePickerModule } from 'primeng/datepicker';
-import { EstadoCajaGeneralFilter, EstadoCajaGeneral,PagedResponse } from '../../Services/CajaGeneral/CajaGeneralPRC.service';
-
 
 
 @Component({
@@ -33,8 +32,7 @@ import { EstadoCajaGeneralFilter, EstadoCajaGeneral,PagedResponse } from '../../
     FormsModule,
     DatePipe,
     MatIconModule,
-    ToastModule, // Añadir ToastModule aquí
-    // DatePickerModule ya lo tienes en el html, pero asegúrate que este en imports si lo usas
+    ToastModule,
   ],
   templateUrl: './caja-general-p.component.html',
   styleUrl: './caja-general-p.component.css',
@@ -51,6 +49,8 @@ export class CajaGeneralPComponent implements OnInit {
   visible: boolean = false;
   pdfUrl: SafeResourceUrl | null = null;
   loading: boolean = false;
+  listaDeEstados: string[] = ['Aprobado', 'Rechazado', 'Pendiente'];
+  estadoSeleccionado: string | null = null;
   totalRegistros: number = 0;
   paginaActual: number = 1;
   tamanioPagina: number = 10;
@@ -69,13 +69,19 @@ export class CajaGeneralPComponent implements OnInit {
   filtroNombreDocumento: string = '';
   filtroNumeroComprobante: string = '';
   filtroEstadoCaja: string = '';
+  anioSeleccionado: Date = new Date();
+  fechasConEstados: FechaConEstados[] = [];
+  isBrowser: boolean;
 
 
-  constructor(
-    private cajaGeneralPRCService: CajaGeneralPRCService,
-    private sanitizer: DomSanitizer,
-    private messageService: MessageService // Inyectar MessageService
-  ) {}
+  constructor(@Inject(PLATFORM_ID) private readonly platformId: Object,
+    private readonly cajaGeneralPRCService: CajaGeneralPRCService,
+    private readonly sanitizer: DomSanitizer,
+    private readonly messageService: MessageService // Inyectar MessageService
+  )
+  {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   ngOnInit(): void {
     this.obtenerSucursalPerfil();
@@ -130,29 +136,7 @@ export class CajaGeneralPComponent implements OnInit {
   });
 }
 
-  obtenerSucursalPerfil() {
-    // Verificar si sessionStorage está disponible
-    if (typeof sessionStorage !== 'undefined') {
-      const perfilId = sessionStorage.getItem('perfilId');
-      if (perfilId && !isNaN(Number(perfilId))) {
-        this.cajaGeneralPRCService.obtenerSucursalesPorPerfilId(Number(perfilId)).subscribe(
-          (response: Sucursal[]) => { // Cambia el tipo de 'response' a 'Sucursal[]'
-            this.sucursales = response; // Asigna directamente la respuesta a this.sucursales
-          },
-          (error) => {
-            console.error('Error al obtener sucursales:', error);
-            this.messageService.add({severity:'error', summary:'Error', detail:'Error al cargar sucursales.'});
-          }
-        );
-      } else {
-        console.error('perfilId no válido en sessionStorage.');
-        this.messageService.add({severity:'error', summary:'Error', detail:'ID de perfil de usuario no válido.'});
-      }
-    } else {
-    console.error('perfilId no válido en sessionStorage.');
-    this.messageService.add({severity:'error', summary:'Error', detail:'ID de perfil de usuario no válido.'});
-  }
-}
+
 
   onPageChange(event: any): void {
     this.paginaActual = event.page + 1; // PrimeNG page index is 0-based
@@ -205,9 +189,8 @@ export class CajaGeneralPComponent implements OnInit {
 
 buscarRegistros() {
     if (this.sucursalSeleccionada && this.fechaInicio && this.fechaFin) {
-      this.cajaGeneralPRCService.obtenerRegistrosPorSucursalYFechas(this.sucursalSeleccionada.id, this.fechaInicio, this.fechaFin).subscribe(
+      this.cajaGeneralPRCService.obtenerRegistrosPorSucursalYFechas(this.sucursalSeleccionada.id, this.fechaInicio, this.fechaFin,this.estadoSeleccionado).subscribe(
         (response) => {
-          console.log('Registros obtenidos:', response);
           this.data = response.map((item: CajaGeneralConEstados) => ({
             id: item.cajaGeneral.id,
             numeroComprobante: item.cajaGeneral.numeroComprobante,
@@ -290,30 +273,68 @@ buscarRegistros() {
       );
     }
   }
+  obtenerSucursalPerfil(): void {
+    const perfilId = sessionStorage.getItem('perfilId');
+    if (perfilId && !isNaN(Number(perfilId))) {
+      this.cajaGeneralPRCService.obtenerSucursalesPorPerfilId(Number(perfilId)).subscribe({
+        next: (response: Sucursal[]) => {
+          this.sucursales = response;
+          // 2. Si se encontraron sucursales, selecciona la primera por defecto.
+          if (this.sucursales.length > 0) {
+            this.sucursalSeleccionada = this.sucursales[0];
+            // 3. Carga los datos para la sucursal y año seleccionados.
+            this.cargarFechas();
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener sucursales:', error);
+          this.messageService.add({severity:'error', summary:'Error', detail:'Error al cargar sucursales.'});
+        }
+      });
+    } else {
+      this.messageService.add({severity:'error', summary:'Error', detail:'ID de perfil de usuario no válido.'});
+    }
+  }
+  cargarFechas(): void {
+    if (this.sucursalSeleccionada?.id && this.anioSeleccionado) {
+      const sucursalId = this.sucursalSeleccionada.id;
+      const anio = this.anioSeleccionado.getFullYear();
 
-  onSucursalSeleccionada(): void {
-    if (this.sucursalSeleccionada?.id) {
-      this.cajaGeneralPRCService.obtenerFechasRegistrosPorSucursal(this.sucursalSeleccionada.id).subscribe({
-        next: (fechas) => {
-          this.fechasConRegistros = fechas.map(f => new Date(f));
+      // Utiliza el método del servicio que acepta ambos parámetros.
+      this.cajaGeneralPRCService.obtenerFechasConEstados(sucursalId, anio).subscribe({
+        next: (respuesta) => {
+          this.fechasConEstados = respuesta;
+          console.log('Fechas con estados obtenidas:', this.fechasConEstados);
         },
         error: (err) => {
-          console.error('Error obteniendo fechas:', err);
-          this.messageService.add({severity:'error', summary:'Error', detail:'Error al obtener fechas de registros.'});
+          console.error('Error obteniendo fechas y estados:', err);
+          this.messageService.add({severity:'error', summary:'Error', detail:'Error al obtener los registros.'});
         }
       });
     }
   }
 
-  estaFechaMarcada(date: any): boolean {
-  const fechaComparar = new Date(date.year, date.month, date.day);
-  return this.fechasConRegistros.some(f => {
-    //console.log('Tipo de f en estaFechaMarcada:', typeof f, f); // Agrega esta línea
-    return f.getFullYear() === fechaComparar.getFullYear() &&
-           f.getMonth() === fechaComparar.getMonth() &&
-           f.getDate() === fechaComparar.getDate();
+
+  obtenerClaseParaFecha(date: any): string {
+  const fechaComparar = new Date(date.year, date.month, date.day).getTime();
+  const itemFecha = this.fechasConEstados.find(item => {
+    const fechaItem = new Date(item.fecha);
+    const fechaItemComparable = new Date(fechaItem.getFullYear(), fechaItem.getMonth(), fechaItem.getDate()).getTime();
+    return fechaItemComparable === fechaComparar;
   });
+  if (!itemFecha) {
+    return '';
+  }
+
+  if (itemFecha.estados.includes('Pendiente')) {
+    return 'fecha-marcada fecha-pendiente';
+  }
+   if (itemFecha.estados.includes('Aprobado')) {
+    return 'fecha-marcada fecha-aprobada';
+  }
+  return '';
 }
+
 
   mostrarPDF(item: any) {
     const rutaArchivo = item.archivo;

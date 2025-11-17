@@ -68,6 +68,11 @@ export interface EstadoCajaGeneralAccionDto {
   procesadorId: number;
   comentario?: string;
 }
+export interface FechaConEstados {
+  fecha: Date;
+  estados: string[];
+}
+
 export interface EstadoCajaGeneralFilter {
   id?: number;
   cajaGeneralId?: number;
@@ -92,22 +97,23 @@ export class CajaGeneralPRCService {
   }
 
   obtenerRegistrosPorSucursalYFechas(
-    sucursalId: number,
-    fechaInicio: Date | null,
-    fechaFin: Date | null
-  ): Observable<CajaGeneralConEstados[]> {
-    let params = new HttpParams().set('sucursalId', sucursalId.toString());
-
-    if (fechaInicio) {
-      params = params.set('fechaInicio', fechaInicio.toISOString());
-    }
-
-    if (fechaFin) {
-      params = params.set('fechaFin', fechaFin.toISOString());
-    }
-
-    return this.http.get<CajaGeneralConEstados[]>(`${this.apiUrl}/registros`, { params });
+  sucursalId: number,
+  fechaInicio: Date | null,
+  fechaFin: Date | null,
+  estado?: string | null // 1. Añade el parámetro opcional 'estado'
+): Observable<CajaGeneralConEstados[]> {
+  let params = new HttpParams().set('sucursalId', sucursalId.toString());
+  if (fechaInicio) {
+    params = params.set('fechaInicio', fechaInicio.toISOString());
   }
+  if (fechaFin) {
+    params = params.set('fechaFin', fechaFin.toISOString());
+  }
+  if (estado) {
+    params = params.set('estado', estado);
+  }
+  return this.http.get<CajaGeneralConEstados[]>(`${this.apiUrl}/registros`, { params });
+}
 
   aceptarCajaGeneral(cajaGeneralId: number, procesadorId: number, comentario: string): Observable<any> {
     const body = { cajaGeneralId, procesadorId, comentario };
@@ -119,8 +125,9 @@ export class CajaGeneralPRCService {
     return this.http.put(`${this.apiUrl}/rechazar`, body);
   }
 
-  obtenerFechasRegistrosPorSucursal(sucursalId: number): Observable<Date[]> {
-    return this.http.get<Date[]>(`${this.apiUrl}/fechas-registros?sucursalId=${sucursalId}`);
+  obtenerFechasConEstados(sucursalId: number, anio: number): Observable<FechaConEstados[]> {
+    const url = `${this.apiUrl}/fechas-registros?sucursalId=${sucursalId}&anio=${anio}`;
+    return this.http.get<FechaConEstados[]>(url);
   }
   descargarArchivo(rutaArchivo: string): Observable<Blob> {
     const params = { rutaArchivo: rutaArchivo };

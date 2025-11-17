@@ -1,36 +1,63 @@
 <div class="container">
   <div class="search-section">
-    <div class="search-inputs">
-      <p-select [options]="sucursales" [(ngModel)]="sucursalSeleccionada" optionLabel="nombre" placeholder="Selecciona la Sucursal" (onChange)="onSucursalSeleccionada()"></p-select>
-      <p-datepicker  [(ngModel)]="fechaInicio"[showIcon]="true"placeholder="Fecha Inicio"[inline]="false">
-        <ng-template pTemplate="date" let-date>
-          <div [ngClass]="{'marcada': estaFechaMarcada(date)}">{{ date.day }}</div>
-        </ng-template>
-      </p-datepicker >
-
-      <p-datepicker  [(ngModel)]="fechaFin"[showIcon]="true"placeholder="Fecha Fin"[inline]="false">
-        <ng-template pTemplate="date" let-date>
-          <div [ngClass]="{'marcada': estaFechaMarcada(date)}">{{ date.day }}</div>
-        </ng-template>
-      </p-datepicker >
-      <button pButton type="button" label="Buscar" icon="pi pi-search" class="p-button-primary" (click)="buscarRegistros()"></button>
+    <div class="search-SucursaF">
+      <ng-container *ngIf="isBrowser">
+        <p-datepicker  [(ngModel)]="anioSeleccionado"
+                    view="year"
+                    dateFormat="yy"
+                    placeholder="Selecciona el Año"
+                    (onSelect)="cargarFechas()">
+        </p-datepicker >
+      </ng-container>
+      <p-select [options]="sucursales"
+          [(ngModel)]="sucursalSeleccionada"
+          optionLabel="nombre"
+          placeholder="Selecciona la Sucursal"
+          (onChange)="cargarFechas()">
+        </p-select>
     </div>
+    <br>
+    <div class="search-SucursaF">
+
+    <ng-container *ngIf="isBrowser">
+            <p-datepicker [(ngModel)]="fechaInicio" [showIcon]="true" placeholder="Fecha Inicio" [inline]="false">
+        <ng-template pTemplate="date" let-date>
+            <div [ngClass]="obtenerClaseParaFecha(date)">{{ date.day }}</div>
+        </ng-template>
+    </p-datepicker>
+
+    <p-datepicker [(ngModel)]="fechaFin" [showIcon]="true" placeholder="Fecha Fin" [inline]="false">
+        <ng-template pTemplate="date" let-date>
+            <div [ngClass]="obtenerClaseParaFecha(date)">{{ date.day }}</div>
+        </ng-template>
+    </p-datepicker>
+        <p-select
+        [options]="listaDeEstados"
+        [(ngModel)]="estadoSeleccionado"
+        placeholder="Filtrar por Estado"
+        [showClear]="true">
+    </p-select>
+    </ng-container>
+
+
+
+  </div>
+  <div class="search-button">
+        <button pButton type="button" label="Buscar" id="btnBuscar" icon="pi pi-search" class="p-button-primary" (click)="buscarRegistros()"></button>
+  </div>
+
+
   </div>
 
 
   <div class="search-section">
-    <div class="search-inputs">
-      <!-- <input pInputText type="number" [(ngModel)]="filtroId" placeholder="Filtrar por ID" /> -->
-      <!-- <input pInputText type="number" [(ngModel)]="filtroCajaGeneralId" placeholder="Filtrar por Caja General ID" /> -->
-      <!-- <input pInputText type="number" [(ngModel)]="filtroUsuarioCambioId" placeholder="Filtrar por Usuario Cambio ID" /> -->
-      <!-- <p-calendar [(ngModel)]="filtroFechaCambio" [showIcon]="true" placeholder="Filtrar por Fecha Cambio"></p-calendar> -->
+    <!-- <div class="search-inputs">
       <input pInputText [(ngModel)]="filtroNuevoEstado" placeholder="Filtrar por Nuevo Estado" />
       <input pInputText [(ngModel)]="filtroNombreDocumento" placeholder="Filtrar por Nombre Documento" />
       <input pInputText [(ngModel)]="filtroNumeroComprobante" placeholder="Filtrar por Número Comprobante" />
       <input pInputText [(ngModel)]="filtroEstadoCaja" placeholder="Filtrar por Estado" />
-      <!-- <p-select [options]="estados" [(ngModel)]="filtroEstadoCaja" placeholder="Filtrar por Estado"></p-select> -->
       <button pButton type="button" label="Segundo Filtro" icon="pi pi-filter" class="p-button-primary" (click)="filtrarPorCampos()"></button>
-    </div>
+    </div> -->
   </div>
 
   <p-table [value]="data" [paginator]="true"
