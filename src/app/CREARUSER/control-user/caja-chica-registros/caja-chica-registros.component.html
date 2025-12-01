@@ -24,37 +24,14 @@
                     (onChange)="applyFilters()">
                 </p-select>
 
-                <!-- <p-dropdown
-                    id="cargadorId"
-                    [options]="usuarios"
-                    [(ngModel)]="filterParams.cargadorId"
-                    placeholder="Seleccione un cargador"
-                    optionLabel="apellido"
-                    optionValue="id"
-                    (onChange)="applyFilters()">
-                </p-dropdown> -->
-
-
-
-
-
-                <!-- <p-dropdown
-                    id="ingresadoPor"
-                    [options]="usuarios"
-                    [(ngModel)]="filterParams.ingresadoPor"
-                    placeholder="Ingresado Por"
-                    optionLabel="nombre"
-                    optionValue="id"
-                    (onChange)="applyFilters()">
-                </p-dropdown> -->
 
     </div>
     <br>
     <div class="contaPrinc">
 
-      <p-calendar id="fechaDesde" placeholder="Desde" [(ngModel)]="filterParams.fechaCreacionDesde" dateFormat="dd/mm/yy" [showIcon]="true" ></p-calendar>
+      <p-datepicker  id="fechaDesde" placeholder="Desde" [(ngModel)]="filterParams.fechaCreacionDesde" dateFormat="dd/mm/yy" ></p-datepicker >
                     <br>
-                    <p-calendar id="fechaHasta" placeholder="Hasta" [(ngModel)]="filterParams.fechaCreacionHasta" dateFormat="dd/mm/yy" [showIcon]="true" ></p-calendar>
+                    <p-datepicker id="fechaHasta" placeholder="Hasta" [(ngModel)]="filterParams.fechaCreacionHasta" dateFormat="dd/mm/yy"  ></p-datepicker >
     </div>
 <br>
     <div class="contaPrinc">

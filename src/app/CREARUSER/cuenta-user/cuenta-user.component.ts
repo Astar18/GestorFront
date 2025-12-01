@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
@@ -11,7 +11,7 @@ import { UsuarioService, Usuario } from '../../Services/USER/Usuario.service';
 
 @Component({
     selector: 'app-cuenta-user',
-    imports: [FormsModule,ReactiveFormsModule,DropdownModule,InputTextModule,PasswordModule,ButtonModule,CardModule,CheckboxModule,
+    imports: [FormsModule,ReactiveFormsModule,SelectModule,InputTextModule,PasswordModule,ButtonModule,CardModule,CheckboxModule,
     ],
     templateUrl: './cuenta-user.component.html',
     styleUrls: ['./cuenta-user.component.css']

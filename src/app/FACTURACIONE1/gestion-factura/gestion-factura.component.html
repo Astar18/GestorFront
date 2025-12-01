@@ -1,0 +1,417 @@
+<p-toast></p-toast>
+
+<div class="factura-form-container">
+    <form [formGroup]="facturaForm" (ngSubmit)="guardarFactura()">
+        
+        <!-- SECCIÓN: INFORMACIÓN GENERAL -->
+        <div class="form-section">
+            <h3>Información General</h3>
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="numeroFactura">Número de Factura *</label>
+                    <input 
+                        pInputText 
+                        id="numeroFactura" 
+                        formControlName="numeroFactura"
+                        placeholder="Ej: FAC-2024-001"
+                        [disabled]="esDetalle" />
+                </div>
+
+                <div class="form-field">
+                    <label for="cliente">Cliente *</label>
+                    <p-select 
+                        id="cliente"
+                        formControlName="clienteId"
+                        [options]="clientes"
+                        optionLabel="nombre"
+                        optionValue="id"
+                        placeholder="Seleccione un cliente"
+                        [disabled]="esDetalle"
+                        [showClear]="true"
+                        [filter]="true"
+                        appendTo="body">
+                    </p-select>
+                </div>
+
+                <div class="form-field">
+                    <label for="area">Área *</label>
+                    <p-select 
+                        id="area"
+                        formControlName="areaId"
+                        [options]="areas"
+                        optionLabel="nombre"
+                        optionValue="id"
+                        placeholder="Seleccione un área"
+                        [disabled]="esDetalle"
+                        [showClear]="true"
+                        appendTo="body">
+                    </p-select>
+                </div>
+
+                <div class="form-field">
+                    <label for="sucursal">Sucursal *</label>
+                    <p-select 
+                        id="sucursal"
+                        formControlName="sucursalId"
+                        [options]="sucursales"
+                        optionLabel="nombre"
+                        optionValue="id"
+                        placeholder="Seleccione una sucursal"
+                        [disabled]="esDetalle"
+                        [showClear]="true"
+                        appendTo="body">
+                    </p-select>
+                </div>
+
+                <div class="form-field">
+                    <label for="fechaEmision">Fecha de Emisión *</label>
+                    <p-datepicker 
+                        id="fechaEmision"
+                        formControlName="fechaEmision"
+                        dateFormat="dd/mm/yy"
+                        [showIcon]="true"
+                        [disabled]="esDetalle"
+                        appendTo="body">
+                    </p-datepicker>
+                </div>
+
+                <div class="form-field">
+                    <label for="fechaVencimiento">Fecha de Vencimiento</label>
+                    <p-datepicker 
+                        id="fechaVencimiento"
+                        formControlName="fechaVencimiento"
+                        dateFormat="dd/mm/yy"
+                        [showIcon]="true"
+                        [disabled]="esDetalle"
+                        appendTo="body">
+                    </p-datepicker>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: DETALLES DE LA FACTURA -->
+        <div class="form-section">
+            <br>
+            <br>
+            <div class="section-header">
+                <h3>Detalle de Productos/Servicios</h3>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button 
+                        *ngIf="!esDetalle"
+                        type="button" 
+                        pButton 
+                        icon="pi pi-box" 
+                        label="Nuevo Producto"
+                        class="p-button-info p-button-sm"
+                        (click)="abrirCrearProducto()">
+                    </button>
+                    <button 
+                        *ngIf="!esDetalle"
+                        type="button" 
+                        pButton 
+                        icon="pi pi-plus" 
+                        label="Agregar Línea"
+                        class="p-button-success p-button-sm"
+                        (click)="agregarDetalle()">
+                    </button>
+                </div>
+            </div>
+
+            <p-table 
+                [value]="detalles.controls" 
+                >
+                
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th scope="col" style="width: 25%">Producto</th>
+                        <th scope="col" style="width: 25%">Descripción</th>
+                        <th scope="col" style="width: 12%">Cantidad</th>
+                        <th scope="col" style="width: 15%">Precio Unitario</th>
+                        <th scope="col" style="width: 15%">Subtotal</th>
+                        <th scope="col" style="width: 8%">Acciones</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-detalle let-i="rowIndex">
+                    <tr [formGroup]="detalle">
+                        <td>
+                            <p-select 
+                                formControlName="productoId"
+                                [options]="productos"
+                                optionLabel="nombre"
+                                optionValue="id"
+                                placeholder="Seleccione producto"
+                                [disabled]="esDetalle"
+                                [showClear]="true"
+                                [filter]="true"
+                                filterBy="nombre,codigo"
+                                appendTo="body"
+                                [style]="{ width: '100%' }">
+                                <ng-template pTemplate="selectedItem" let-option>
+                                    <span *ngIf="option">{{ option.codigo }} - {{ option.nombre }}</span>
+                                </ng-template>
+                                <ng-template pTemplate="item" let-option>
+                                    <div>
+                                        <div><strong>{{ option.codigo }}</strong> - {{ option.nombre }}</div>
+                                        <small *ngIf="option.precioUnitario">Precio: {{ option.precioUnitario | currency:'USD' }}</small>
+                                    </div>
+                                </ng-template>
+                            </p-select>
+                        </td>
+                        <td>
+                            <input 
+                                pInputText 
+                                formControlName="descripcion"   
+                                placeholder="Descripción del ítem"
+                                [disabled]="esDetalle"
+                                style="width: 100%" />
+                        </td>
+                        <td>
+                            <p-inputnumber 
+                                formControlName="cantidad"
+                                [min]="1"
+                                [showButtons]="true"
+                                [disabled]="esDetalle"
+                                buttonLayout="horizontal"
+                                decrementButtonClass="p-button-secondary"
+                                incrementButtonClass="p-button-secondary"
+                                incrementButtonIcon="pi pi-plus"
+                                decrementButtonIcon="pi pi-minus">
+                            </p-inputnumber>
+                        </td>
+                        <td>
+                            <p-inputnumber 
+                                formControlName="precioUnitario"
+                                mode="currency"
+                                currency="USD"
+                                locale="en-US"
+                                [min]="0"
+                                [disabled]="esDetalle">
+                            </p-inputnumber>
+                        </td>
+                        <td>
+                            <p-inputnumber 
+                                formControlName="subtotal"
+                                mode="currency"
+                                currency="USD"
+                                locale="en-US"
+                                [disabled]="true">
+                            </p-inputnumber>
+                        </td>
+                        <td class="text-center">
+                            <button 
+                                *ngIf="!esDetalle"
+                                type="button" 
+                                pButton 
+                                icon="pi pi-trash" 
+                                class="p-button-danger p-button-text p-button-sm"
+                                (click)="eliminarDetalle(i)"
+                                [disabled]="detalles.length === 1">
+                            </button>
+                        </td>
+                    </tr>
+                    <br>
+                </ng-template>
+                <br>
+                <br>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5" class="text-center">No hay detalles agregados</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <br>
+            <br>
+        </div>
+
+        <!-- SECCIÓN: TOTALES -->
+        <div class="form-section totales-section">
+            <h3>Totales</h3>
+            <div class="totales-grid">
+                <div class="total-row">
+                    <label>Subtotal:</label>
+                    <span class="total-value">{{ facturaForm.get('subtotal')?.value | currency:'USD':'symbol':'1.2-2' }}</span>
+                </div>
+                <div class="total-row">
+                    <label>IVA (15%):</label>
+                    <span class="total-value">{{ facturaForm.get('iva')?.value | currency:'USD':'symbol':'1.2-2' }}</span>
+                </div>
+                <div class="total-row total-destacado">
+                    <label>Total con IVA:</label>
+                    <span class="total-value">{{ facturaForm.get('totalConIva')?.value | currency:'USD':'symbol':'1.2-2' }}</span>
+                </div>
+                <div class="total-row">
+                    <label for="valorRetencion">Valor Retención:</label>
+                    <p-inputnumber 
+                        id="valorRetencion"
+                        formControlName="valorRetencion"
+                        mode="currency"
+                        currency="USD"
+                        locale="en-US"
+                        [min]="0"
+                        [disabled]="esDetalle"
+                        (onBlur)="onRetencionChange()">
+                    </p-inputnumber>
+                </div>
+                <div class="total-row total-final">
+                    <label>Total Final:</label>
+                    <span class="total-value final">{{ facturaForm.get('totalFinal')?.value | currency:'USD':'symbol':'1.2-2' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: OBSERVACIONES -->
+        <div class="form-section">
+            <h3>Observaciones</h3>
+            <textarea 
+                pTextarea 
+                formControlName="observaciones"
+                rows="3"
+                placeholder="Observaciones adicionales..."
+                [disabled]="esDetalle"
+                style="width: 100%">
+            </textarea>
+        </div>
+
+        <!-- BOTONES DE ACCIÓN -->
+        <div class="form-actions">
+            <button 
+                type="button" 
+                pButton 
+                [label]="esDetalle ? 'Cerrar' : 'Cancelar'"
+                icon="pi pi-times" 
+                class="p-button-secondary"
+                (click)="cerrarFormulario()">
+            </button>
+            <button 
+                *ngIf="!esDetalle"
+                type="submit" 
+                pButton 
+                [label]="tituloBotonGuardar"
+                icon="pi pi-save" 
+                class="p-button-success"
+                [disabled]="facturaForm.invalid || cargando"
+                [loading]="cargando">
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- DIÁLOGO PARA CREAR PRODUCTO -->
+<p-dialog 
+    [(visible)]="productoDialog" 
+    [style]="{ width: '600px' }" 
+    header="Crear Nuevo Producto" 
+    [modal]="true" 
+    [draggable]="false"
+    [blockScroll]="true">
+    
+    <ng-template pTemplate="content">
+        <form [formGroup]="productoForm" (ngSubmit)="guardarProducto()">
+            <div class="p-fluid">
+                <div class="form-grid" style="gap: 1rem;">
+                    <div class="form-field">
+                        <label for="codigo">Código *</label>
+                        <input 
+                            pInputText 
+                            id="codigo" 
+                            formControlName="codigo"
+                            placeholder="Ej: PROD-001" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="nombre">Nombre *</label>
+                        <input 
+                            pInputText 
+                            id="nombre" 
+                            formControlName="nombre"
+                            placeholder="Nombre del producto" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="descripcion">Descripción</label>
+                        <textarea 
+                            pTextarea 
+                            id="descripcion"
+                            formControlName="descripcion"
+                            rows="2"
+                            placeholder="Descripción del producto">
+                        </textarea>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="precioUnitario">Precio Unitario *</label>
+                        <p-inputnumber 
+                            id="precioUnitario"
+                            formControlName="precioUnitario"
+                            mode="currency"
+                            currency="USD"
+                            locale="en-US"
+                            [min]="0">
+                        </p-inputnumber>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="unidadMedida">Unidad de Medida</label>
+                        <input 
+                            pInputText 
+                            id="unidadMedida" 
+                            formControlName="unidadMedida"
+                            placeholder="Ej: UND, KG, LT" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="categoria">Categoría</label>
+                        <input 
+                            pInputText 
+                            id="categoria" 
+                            formControlName="categoria"
+                            placeholder="Categoría del producto" />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="stock">Stock Inicial</label>
+                        <p-inputnumber 
+                            id="stock"
+                            formControlName="stock"
+                            [min]="0"
+                            [showButtons]="true">
+                        </p-inputnumber>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="stockMinimo">Stock Mínimo</label>
+                        <p-inputnumber 
+                            id="stockMinimo"
+                            formControlName="stockMinimo"
+                            [min]="0"
+                            [showButtons]="true">
+                        </p-inputnumber>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button 
+            type="button" 
+            pButton 
+            label="Cancelar"
+            icon="pi pi-times" 
+            class="p-button-secondary"
+            (click)="cerrarProductoDialog()">
+        </button>
+        <button 
+            type="button" 
+            pButton 
+            label="Crear Producto"
+            icon="pi pi-check" 
+            class="p-button-success"
+            [disabled]="productoForm.invalid || guardandoProducto"
+            [loading]="guardandoProducto"
+            (click)="guardarProducto()">
+        </button>
+    </ng-template>
+</p-dialog>

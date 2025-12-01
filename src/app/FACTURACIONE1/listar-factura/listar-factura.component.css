@@ -1,0 +1,122 @@
+.card {
+  padding: 2rem;
+  background: var(--surface-card);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos globales para PrimeNG 20 - Asegurar que los overlays se vean correctamente */
+:host ::ng-deep .p-component-overlay {
+  z-index: 1100 !important;
+}
+
+:host ::ng-deep .p-dialog {
+  z-index: 1000 !important;
+}
+
+:host ::ng-deep .p-dialog-mask {
+  z-index: 999 !important;
+}
+
+.font-bold {
+  font-weight: 600;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.p-2 {
+  padding: 0.5rem;
+}
+
+/* Estilos para el formulario */
+.form-container {
+  padding: 1rem 0;
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.p-error {
+  color: var(--red-500);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Estilos para los botones de acción */
+.p-button.p-button-rounded {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+/* Footer del diálogo */
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* Responsive */
+@media screen and (max-width: 960px) {
+  .card {
+    padding: 1rem;
+  }
+  
+  ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+    font-size: 0.875rem;
+  }
+  
+  ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+    font-size: 0.875rem;
+  }
+}
+
+/* Mejora visual para los tags de estado */
+::ng-deep .p-tag {
+  padding: 0.25rem 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* Estilos para inputs en header de tabla */
+::ng-deep .p-datatable .p-datatable-thead > tr > th .p-inputtext {
+  width: 100%;
+}
+
+::ng-deep .p-datatable .p-datatable-thead > tr > th .p-select {
+  width: 100%;
+}

@@ -1,0 +1,288 @@
+<div class="card">
+    <p-toast />
+    <p-confirmDialog />
+
+    <!-- Toolbar -->
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <p-button 
+                label="Nueva Factura" 
+                icon="pi pi-plus" 
+                severity="success" 
+                (onClick)="crearFactura()">
+            </p-button>
+        </ng-template>
+    </p-toolbar>
+
+    <!-- Tabla Lazy -->
+    <p-table 
+        #dt
+        [value]="facturas" 
+        [lazy]="true"
+        (onLazyLoad)="loadFacturas($event)"
+        [totalRecords]="totalRecords"
+        [loading]="loading"
+        [rows]="10" 
+        [paginator]="true" 
+        [rowsPerPageOptions]="[5, 10, 20, 50]"
+        [tableStyle]="{ 'min-width': '80rem' }"
+        [rowHover]="true"
+        dataKey="id"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} facturas"
+        [showCurrentPageReport]="true">
+        
+        <ng-template pTemplate="header">
+            <tr>
+                <!-- Número Factura -->
+                <th style="min-width: 200px">
+                    <div class="flex flex-column gap-2">
+                        <span class="font-bold">Nro. Factura</span>
+                        <input 
+                            pInputText 
+                            type="text" 
+                            style="width: 100%"
+                            placeholder="Buscar" 
+                            (input)="onFilterInput($event, 'numero')" />
+                    </div>
+                </th>
+
+                <!-- Cliente -->
+                <th style="min-width: 200px">
+                    <div class="flex flex-column gap-2">
+                        <span class="font-bold">Cliente</span>
+                        <input 
+                            pInputText 
+                            type="text" 
+                            style="width: 100%"
+                            placeholder="Buscar cliente" 
+                            (input)="onFilterInput($event, 'proveedorNombre')" />
+                    </div>
+                </th>
+
+                <!-- Área -->
+                <th style="min-width: 180px">
+                    <div class="flex flex-column gap-2">
+                        <span class="font-bold">Área</span>
+                        <input 
+                            pInputText 
+                            type="text" 
+                            style="width: 100%"
+                            placeholder="Buscar área" 
+                            (input)="onFilterInput($event, 'areaNombre')" />
+                    </div>
+                </th>
+
+                <!-- Fecha Emisión -->
+                <th style="min-width: 250px">
+                    <div class="flex flex-column gap-2">
+                        <span class="font-bold">F. Emisión</span>
+                        <div class="flex gap-2">
+                            <p-datepicker 
+                                [(ngModel)]="filtros.fechaEmisionDesde" 
+                                (onSelect)="onFilterInput({value: $event}, 'fechaEmisionDesde')"
+                                placeholder="Desde"
+                                dateFormat="dd/mm/yy"
+                                [showIcon]="true"
+                                appendTo="body"
+                                [style]="{ width: '50%' }">
+                            </p-datepicker>
+                            <p-datepicker 
+                                [(ngModel)]="filtros.fechaEmisionHasta" 
+                                (onSelect)="onFilterInput({value: $event}, 'fechaEmisionHasta')"
+                                placeholder="Hasta"
+                                dateFormat="dd/mm/yy"
+                                [showIcon]="true"
+                                appendTo="body"
+                                [style]="{ width: '50%' }">
+                            </p-datepicker>
+                        </div>
+                    </div>
+                </th>
+
+                <!-- Total Final -->
+                <th class="text-right" style="min-width: 120px">
+                    <div class="flex flex-column gap-2">
+                        <span class="font-bold">Total</span>
+                    </div>
+                </th>
+
+                <!-- Estado -->
+                <th style="min-width: 180px">
+                    <div class="flex flex-column gap-2">
+                        <span class="font-bold">Estado</span>
+                        <p-select 
+                            [options]="estadoFilterOptions" 
+                            [(ngModel)]="filtros.estado" 
+                            (onChange)="onFilterInput($event, 'estado')"
+                            optionLabel="label" 
+                            optionValue="value"
+                            placeholder="Todos"
+                            [showClear]="true"
+                            appendTo="body"
+                            [style]="{ width: '100%' }">
+                        </p-select>
+                    </div>
+                </th>
+
+                <!-- Responsable -->
+                <th style="min-width: 150px">
+                    <div class="flex flex-column gap-2">
+                        <span class="font-bold">Responsable</span>
+                    </div>
+                </th>
+
+                <th style="min-width: 200px">Acciones</th>
+            </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="body" let-item>
+            <tr>
+                <td>{{ item.numero || item.numeroFactura }}</td>
+                <td>{{ item.proveedorNombre || item.clienteNombre || 'N/A' }}</td>
+                <td>{{ item.areaNombre || 'N/A' }}</td>
+                <td>{{ formatDate(item.fechaEmision) }}</td>
+                <td class="text-right font-bold">{{ formatCurrency(item.totalPagar || item.totalFinal || 0) }}</td>
+                <td>
+                    <p-tag 
+                        [value]="item.estado" 
+                        [severity]="getSeverity(item.estado)">
+                    </p-tag>
+                </td>
+                <td>{{ item.responsableNombre || 'Sin asignar' }}</td>
+                <td>
+                    <div class="flex flex-column gap-2">
+                        <div class="flex gap-2">
+                            <p-button 
+                                icon="pi pi-eye" 
+                                [rounded]="true" 
+                                [text]="true" 
+                                severity="info"
+                                pTooltip="Ver detalle"
+                                tooltipPosition="top"
+                                (onClick)="verDetalle(item)">
+                            </p-button>
+                            <p-button 
+                                icon="pi pi-pencil" 
+                                [rounded]="true" 
+                                [text]="true" 
+                                severity="warn"
+                                pTooltip="Editar"
+                                tooltipPosition="top"
+                                (onClick)="editarFactura(item)">
+                            </p-button>
+                        </div>
+                        <div class="flex gap-2">
+                            <p-button 
+                                icon="pi pi-refresh" 
+                                [rounded]="true" 
+                                [text]="true" 
+                                severity="secondary"
+                                pTooltip="Cambiar estado"
+                                tooltipPosition="top"
+                                (onClick)="abrirCambioEstado(item)">
+                            </p-button>
+                            <p-button 
+                                icon="pi pi-trash" 
+                                [rounded]="true" 
+                                [text]="true" 
+                                severity="danger"
+                                pTooltip="Eliminar"
+                                tooltipPosition="top"
+                                (onClick)="eliminarFactura(item)">
+                            </p-button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="9" class="text-center">No se encontraron facturas.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <!-- DIÁLOGO CAMBIO DE ESTADO -->
+    <p-dialog 
+        [(visible)]="estadoDialog" 
+        [style]="{ width: '450px' }" 
+        header="Cambiar Estado de Factura" 
+        [modal]="true" 
+        styleClass="p-fluid"
+        [draggable]="false"
+        [resizable]="false">
+        
+        <ng-template pTemplate="content">
+            <div class="form-container">
+                
+                <div class="field">
+                    <label>Factura: <strong>{{ facturaSeleccionada?.numero || facturaSeleccionada?.numeroFactura }}</strong></label>
+                </div>
+
+                <div class="field">
+                    <label for="nuevoEstado">Nuevo Estado</label>
+                    <p-select 
+                        id="nuevoEstado"
+                        [options]="estadoOptions" 
+                        [(ngModel)]="nuevoEstado" 
+                        optionLabel="label" 
+                        optionValue="value"
+                        placeholder="Seleccione estado">
+                    </p-select>
+                </div>
+
+                <div class="field">
+                    <label for="comentario">Comentario (opcional)</label>
+                    <textarea 
+                        id="comentario" 
+                        pInputText
+                        [(ngModel)]="comentarioEstado" 
+                        rows="3"
+                        placeholder="Agregue un comentario sobre el cambio...">
+                    </textarea>
+                </div>
+
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <div class="dialog-footer">
+                <p-button 
+                    label="Cancelar" 
+                    icon="pi pi-times" 
+                    [text]="true" 
+                    severity="secondary" 
+                    (onClick)="estadoDialog = false">
+                </p-button>
+                <p-button 
+                    label="Guardar" 
+                    icon="pi pi-check" 
+                    severity="primary" 
+                    (onClick)="guardarCambioEstado()">
+                </p-button>
+            </div>
+        </ng-template>
+    </p-dialog>
+
+    <!-- DIÁLOGO DE GESTIÓN DE FACTURA (Crear/Editar/Detalle) -->
+    <p-dialog 
+        [(visible)]="gestionDialog" 
+        [style]="{ width: '90vw', maxWidth: '1200px', height: '85vh' }" 
+        [header]="modoGestion === 'crear' ? 'Nueva Factura' : modoGestion === 'editar' ? 'Editar Factura' : 'Detalle de Factura'" 
+        [modal]="true" 
+        [draggable]="false"
+        [resizable]="false"
+        [maximizable]="true"
+        [blockScroll]="true">
+        
+        <ng-template pTemplate="content">
+            <app-gestion-factura
+                [modo]="modoGestion"
+                [facturaId]="facturaIdSeleccionada"
+                (guardado)="onFacturaGuardada()"
+                (cancelado)="gestionDialog = false">
+            </app-gestion-factura>
+        </ng-template>
+    </p-dialog>
+</div>

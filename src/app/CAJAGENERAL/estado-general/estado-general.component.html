@@ -34,18 +34,18 @@
       </th>
       <th class="filtro-item">
         <div class="fecha-filtros">
-          <p-calendar appendTo="body"
+          <p-datePicker appendTo="body"
             [(ngModel)]="filtros.fechaInicio"
             (onSelect)="onFiltroChange()"
             placeholder="Desde"
             dateFormat="yy-mm-dd"
-          ></p-calendar>
-          <p-calendar
+          ></p-datePicker>
+          <p-datePicker
             [(ngModel)]="filtros.fechaFin"
             (onSelect)="onFiltroChange()"
             placeholder="Hasta"
             dateFormat="yy-mm-dd"
-          ></p-calendar>
+          ></p-datePicker>
         </div>
       </th>
       <th class="filtro-item">

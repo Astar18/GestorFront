@@ -11,7 +11,7 @@
 
                 <input id="nombreDocumento" placeholder="Nombre Documento" type="text" pInputText [(ngModel)]="filterParams.nombreDocumento" (keyup.enter)="applyFilters()">
 
-                <p-dropdown
+                <p-select
                     id="sucursal"
                     [options]="sucursales"
                     [(ngModel)]="filterParams.sucursalId"
@@ -19,41 +19,16 @@
                     optionLabel="nombre"
                     optionValue="id"
                     (onChange)="applyFilters()">
-                </p-dropdown>
+                </p-select>
 
-                <p-dropdown id="estado" [options]="estados" [(ngModel)]="filterParams.estado" placeholder="Seleccione un estado" optionLabel="label" optionValue="value" (onChange)="applyFilters()"></p-dropdown>
-
-
-
-
-                    <!-- <p-dropdown
-                    id="ingresadoPor"
-                    [options]="usuarios"
-                    [(ngModel)]="filterParams.ingresadoPor"
-                    placeholder="Ingresado Por"
-                    optionLabel="apellido"
-                    optionValue="id"
-                    (onChange)="applyFilters()">
-                </p-dropdown> -->
-
-
-                <!-- <p-dropdown
-                    id="cargadorId"
-                    [options]="usuarios"
-                    [(ngModel)]="filterParams.cargadorId"
-                    placeholder="Seleccione un cargador"
-                    optionLabel="apellido"
-                    optionValue="id"
-                    (onChange)="applyFilters()">
-                </p-dropdown> -->
-                 <!-- <input id="numeroComprobante" placeholder="Número Comprobante" type="text" pInputText [(ngModel)]="filterParams.numeroComprobante" (keyup.enter)="applyFilters()"> -->
+                <p-select id="estado" [options]="estados" [(ngModel)]="filterParams.estado" placeholder="Seleccione un estado" optionLabel="label" optionValue="value" (onChange)="applyFilters()"></p-select>
 
 
     </div>
     <br>
     <div class="contaPrinc">
-      <p-calendar id="fechaDesde" placeholder="Desde" [(ngModel)]="filterParams.fechaCreacionDesde" dateFormat="dd/mm/yy" [showIcon]="true" class="p-flex-1"></p-calendar>
-                    <p-calendar id="fechaHasta" placeholder="Hasta" [(ngModel)]="filterParams.fechaCreacionHasta" dateFormat="dd/mm/yy" [showIcon]="true" class="p-flex-1"></p-calendar>
+      <p-datepicker  id="fechaDesde" placeholder="Desde" [(ngModel)]="filterParams.fechaCreacionDesde" dateFormat="dd/mm/yy" [showIcon]="true" class="p-flex-1"></p-datepicker>
+                    <p-datepicker  id="fechaHasta" placeholder="Hasta" [(ngModel)]="filterParams.fechaCreacionHasta" dateFormat="dd/mm/yy" [showIcon]="true" class="p-flex-1"></p-datepicker>
     </div>
 
 <br>

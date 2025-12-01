@@ -11,7 +11,7 @@ export class AuthGuard implements CanActivate {
     const firmaHmac = sessionStorage.getItem('firmaHmac');
 
     if (!firmaHmac) {
-      this.router.navigate(['/login']); // Redirige al login si no hay firmaHmac
+      this.router.navigate(['/login']);
       return false;
     }
 

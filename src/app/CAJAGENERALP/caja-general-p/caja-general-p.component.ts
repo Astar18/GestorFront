@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +22,7 @@ import { DatePickerModule } from 'primeng/datepicker';
   imports: [
     TableModule,
     InputTextModule,DatePickerModule,
-    CalendarModule, // CalendarModule fue renombrado a DatePickerModule en el html
+    DatePickerModule, // CalendarModule fue renombrado a DatePickerModule en el html
     ButtonModule,
     DialogModule,
     SelectModule,

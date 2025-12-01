@@ -2,7 +2,7 @@ import { Perfil } from './../../Services/Combos/Combo.service';
 import { Component, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
-import { CalendarModule } from 'primeng/calendar'; // Aunque en HTML se usa DatePickerModule
+import { DatePicker } from 'primeng/datepicker';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { FormsModule } from '@angular/forms';
@@ -25,6 +25,7 @@ import { MessageService } from 'primeng/api'; // Importar MessageService
     DatePickerModule, // Correcto, ya que usas p-datepicker
     ButtonModule,
     DialogModule,
+    DatePicker,
     CommonModule,
     TagModule,
     FormsModule,

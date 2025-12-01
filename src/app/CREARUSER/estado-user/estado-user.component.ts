@@ -9,9 +9,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { DropdownModule } from 'primeng/dropdown';
 import { SelectModule } from 'primeng/select';
-
+  
 
 @Component({
   selector: 'app-estado-user',

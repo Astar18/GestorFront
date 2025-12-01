@@ -1,72 +1,49 @@
 <div class="card flex justify-content-center styled-card">
-    <p-tabView class="custom-stepper" [scrollable]="true">
-      <!-- Panel 1: Cajas -->
-      <p-tabPanel class="tabPersonal" >
-        <ng-template pTemplate="header">
-          <div class="stepper-header">
-            <h3 class="stepper-title">Crear Cuenta</h3>
-            <i class="pi pi-box"></i>
-          </div>
-        </ng-template>
-        <div class="stepper-content">
+  <p-tabs value="0"> 
+  <!-- <p-tabView class="custom-stepper" [scrollable]="true"> -->
+    <p-tablist>
+        <p-tab value="0"> <i class="pi pi-box"></i> Crear Cuenta</p-tab>
+        <p-tab value="1">Usuarios Creados</p-tab>
+        <p-tab value="2">Asignar Perfiles</p-tab>
+        <p-tab value="3">Usuarios Procesadores</p-tab>
+        <p-tab value="4">Sucursales</p-tab>
+        <p-tab value="5">Control Usuarios</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+        <p-tabpanel value="0">
+          <div class="stepper-content">
           <app-cuenta-user></app-cuenta-user>
         </div>
-      </p-tabPanel >
-      <p-tabPanel class="tabPersonal">
-        <ng-template pTemplate="header">
-          <div class="stepper-header">
-            <h3 class="stepper-title">Usuarios Creados</h3>
-            <i class="pi pi-info-circle"></i>
-          </div>
-        </ng-template>
-        <div class="stepper-content">
+      </p-tabpanel>
+      <p-tabpanel value="1">
+          <div class="stepper-content">
           <app-estado-user></app-estado-user>
         </div>
-      </p-tabPanel>
-      <p-tabPanel class="tabPersonal">
-        <ng-template pTemplate="header">
-          <div class="stepper-header">
-            <h3 class="stepper-title">Asignar Perfiles</h3>
-            <i class="pi pi-info-circle"></i>
-          </div>
-        </ng-template>
-        <div class="stepper-content">
+      </p-tabpanel>
+      <p-tabpanel value="2">
+          <div class="stepper-content">
           <app-perfil-usuario></app-perfil-usuario>
         </div>
-      </p-tabPanel>
-      <p-tabPanel class="tabPersonal">
-        <ng-template pTemplate="header">
-          <div class="stepper-header">
-            <h3 class="stepper-title">Usuarios Procesadores</h3>
-            <i class="pi pi-info-circle"></i>
-          </div>
-        </ng-template>
-        <div class="stepper-content">
+      </p-tabpanel>
+      <p-tabpanel value="3">
+          <div class="stepper-content">
           <app-usuario-sucursales></app-usuario-sucursales>
         </div>
-      </p-tabPanel>
-      <p-tabPanel class="tabPersonal">
-        <ng-template pTemplate="header">
-          <div class="stepper-header">
-            <h3 class="stepper-title">Sucursales</h3>
-            <i class="pi pi-info-circle"></i>
-          </div>
-        </ng-template>
-        <div class="stepper-content">
+      </p-tabpanel>
+      <p-tabpanel value="4">
+          <div class="stepper-content">
           <app-sucursales></app-sucursales>
         </div>
-      </p-tabPanel>
-      <p-tabPanel class="tabPersonal">
-        <ng-template pTemplate="header">
-          <div class="stepper-header">
-            <h3 class="stepper-title">Control Usuarios</h3>
-            <i class="pi pi-info-circle"></i>
-          </div>
-        </ng-template>
+      </p-tabpanel>
+      <p-tabpanel value="5">
         <div class="stepper-content">
           <app-control-user></app-control-user>
         </div>
-      </p-tabPanel>
+      </p-tabpanel>
 
-    </p-tabView>
+      </p-tabpanels>
+
+
+
+    </p-tabs> 
   </div>

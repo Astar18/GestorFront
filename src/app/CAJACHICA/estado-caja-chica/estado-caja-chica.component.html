@@ -17,7 +17,7 @@
         <input pInputText [(ngModel)]="filtros.documentoNombre" (input)="onFiltroInput()" placeholder="Documento" />
       </th>
       <th>
-        <p-calendar [(ngModel)]="filtros.fechaInicio" (onSelect)="cargarCajaChicaFiltrada()" placeholder="Fecha" dateFormat="yy-mm-dd" showIcon="false" />
+        <p-datePicker [(ngModel)]="filtros.fechaInicio" (onSelect)="cargarCajaChicaFiltrada()" placeholder="Fecha" dateFormat="yy-mm-dd" showIcon="false" />
       </th>
       <th>
         <input pInputText [(ngModel)]="filtros.comentario" (input)="onFiltroInput()" placeholder="Comentario" />

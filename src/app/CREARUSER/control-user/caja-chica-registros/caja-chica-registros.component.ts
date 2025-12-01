@@ -6,13 +6,12 @@ import { FormsModule } from '@angular/forms';
 
 // PrimeNG Modules
 import { TableModule } from 'primeng/table';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePicker } from 'primeng/datepicker';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { PaginatorModule } from 'primeng/paginator';
 import { DividerModule } from 'primeng/divider';
-import { SelectModule } from 'primeng/select';
 // Importaciones de tus modelos y servicio
 import {
   CajaChica,
@@ -52,7 +51,7 @@ export interface CajaChicaFilterParams extends PaginationParams {
     CommonModule,
     FormsModule,DividerModule,
     TableModule,
-    CalendarModule,
+    DatePicker,
     ButtonModule,
     InputTextModule,
     SelectModule,

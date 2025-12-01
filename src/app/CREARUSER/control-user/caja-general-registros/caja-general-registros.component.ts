@@ -4,13 +4,11 @@ import { FormsModule } from '@angular/forms';
 
 // Importaciones de módulos de PrimeNG
 import { TableModule } from 'primeng/table';
-import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
 import { PaginatorModule } from 'primeng/paginator';
 import { DividerModule } from 'primeng/divider'; // Para el divisor visual en el HTML
-
+import { SelectModule } from 'primeng/select';
 
 // Importaciones de tus modelos y servicio. ¡Asegúrate que estas rutas sean correctas!
 import {
@@ -21,6 +19,7 @@ import {
   Usuario,
   UsuarioService // Tu servicio que contiene los métodos para CajaGeneral, sucursales y usuarios
 } from '../../../Services/USER/Usuario.service';
+import { DatePicker } from 'primeng/datepicker';
 interface Sucursal{
   id: number;
   codigoSucursal: string;
@@ -34,10 +33,10 @@ interface Sucursal{
     FormsModule, // Módulo necesario para [(ngModel)]
     // Módulos de PrimeNG usados en la plantilla
     TableModule,
-    CalendarModule,
+    DatePicker,
     ButtonModule,
     InputTextModule,
-    DropdownModule,
+    SelectModule,
     PaginatorModule,
     DividerModule,
 

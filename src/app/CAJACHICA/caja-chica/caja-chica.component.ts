@@ -9,7 +9,7 @@ import { TableModule } from 'primeng/table';
 import { MatIconModule } from '@angular/material/icon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePicker } from 'primeng/datepicker';
 import { MatIcon } from '@angular/material/icon';
 import { CajaChicaService,CajaChica } from '../../Services/CajaChica/caja-chica.service';
 import { MessageService } from 'primeng/api';
@@ -23,7 +23,7 @@ import { DatePickerModule } from 'primeng/datepicker';
   imports: [
     ReactiveFormsModule, MatIconModule, IconFieldModule, SelectModule,ToastModule,ButtonModule,
     TableModule, FloatLabelModule, InputTextModule, DatePickerModule, MatIcon,
-    FormsModule, InputIconModule, CommonModule, InputGroupModule
+    FormsModule, InputIconModule, CommonModule, InputGroupModule,DatePicker
   ],
   templateUrl: './caja-chica.component.html',
   styleUrl: './caja-chica.component.css',

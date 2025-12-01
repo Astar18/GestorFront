@@ -81,7 +81,7 @@
     ></p-select>
   </div>
   <div class="seccion2">
-    <p-table [value]="[1]" [responsive]="true" *ngIf="perfilSeleccionado" [style]="{'width': '100%', 'overflow': 'auto'}">
+    <p-table [value]="[1]"  *ngIf="perfilSeleccionado" [style]="{'width': '100%', 'overflow': 'auto'}">
       <ng-template pTemplate="header">
         <tr>
           <th *ngFor="let sucursal of sucursales">

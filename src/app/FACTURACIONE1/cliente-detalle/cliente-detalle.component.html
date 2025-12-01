@@ -1,0 +1,208 @@
+<div class="card">
+    <p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <p-button 
+                label="Nuevo Proveedor" 
+                icon="pi pi-plus" 
+                severity="success" 
+                (onClick)="openNew()">
+            </p-button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table 
+        #dt
+        [value]="proveedores" 
+        [lazy]="true"
+        (onLazyLoad)="loadProveedores($event)"
+        [totalRecords]="totalRecords"
+        [loading]="loading"
+        [rows]="10" 
+        [paginator]="true" 
+        [rowsPerPageOptions]="[5, 10, 20]"
+        [tableStyle]="{ 'min-width': '75rem' }"
+        [rowHover]="true"
+        dataKey="id"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} proveedores"
+        [showCurrentPageReport]="true">
+        
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    <div class="flex flex-column gap-2">
+                        <span class="font-bold">RUC</span>
+                        <input 
+                            pInputText 
+                            type="text" 
+                            class="w-full p-inputtext-sm"
+                            placeholder="Buscar RUC" 
+                            (input)="onFilterInput($event, 'identificacion')" />
+                    </div>
+                </th>
+
+                <th>
+                    <div class="flex flex-column gap-2">
+                        <span class="font-bold">Razón Social</span>
+                        <input 
+                            pInputText 
+                            type="text" 
+                            class="w-full p-inputtext-sm"
+                            placeholder="Buscar Razón" 
+                            (input)="onFilterInput($event, 'razonSocial')" />
+                    </div>
+                </th>
+
+                <th>
+                    <div class="flex flex-column gap-2">
+                        <span class="font-bold">Nombre Comercial</span>
+                        <input 
+                            pInputText 
+                            type="text" 
+                            class="w-full p-inputtext-sm"
+                            placeholder="Buscar Nombre" 
+                            (input)="onFilterInput($event, 'nombreComercial')" />
+                    </div>
+                </th>
+
+                <th>
+                    <div class="flex flex-column gap-2">
+                        <span class="font-bold">Teléfono</span>
+                        <input 
+                            pInputText 
+                            type="text" 
+                            class="w-full p-inputtext-sm"
+                            placeholder="Buscar Tel." 
+                            (input)="onFilterInput($event, 'telefono')" />
+                    </div>
+                </th>
+
+                <th>
+                    <div class="flex flex-column gap-2">
+                        <span class="font-bold">Estado</span>
+                        <p-select 
+                            [options]="estadoFilterOptions" 
+                            [(ngModel)]="filtros.estado" 
+                            (onChange)="onFilterInput($event, 'estado')"
+                            optionLabel="label" 
+                            optionValue="value"
+                            placeholder="Todos"
+                            styleClass="w-full"
+                            appendTo="body" 
+                            [showClear]="true">
+                        </p-select>
+                    </div>
+                </th>
+
+                <th style="width: 10rem">Acciones</th>
+            </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="body" let-prov>
+            <tr>
+                <td>{{ prov.identificacion }}</td>
+                <td>{{ prov.razonSocial }}</td>
+                <td>{{ prov.nombreComercial }}</td>
+                <td>{{ prov.telefono }}</td>
+                <td>
+                    <p-tag 
+                        [value]="prov.estado" 
+                        [severity]="prov.estado === 'Activo' ? 'success' : 'danger'">
+                    </p-tag>
+                </td>
+                <td>
+                    <p-button 
+                        icon="pi pi-pencil" 
+                        [rounded]="true" 
+                        [text]="true" 
+                        severity="info" 
+                        (click)="editProveedor(prov)">
+                    </p-button>
+                    <p-button 
+                        icon="pi pi-trash" 
+                        [rounded]="true" 
+                        [text]="true" 
+                        severity="danger" 
+                        (click)="deleteProveedor(prov)">
+                    </p-button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <!-- EL DIÁLOGO SE MANTIENE IGUAL -->
+    <p-dialog 
+        [(visible)]="proveedorDialog" 
+        [style]="{ width: '500px' }" 
+        [breakpoints]="{ '960px': '75vw', '640px': '95vw' }"
+        header="Detalles del Proveedor" 
+        [modal]="true" 
+        styleClass="p-fluid custom-modal"
+        [draggable]="false"
+        [resizable]="false">
+        
+        <ng-template pTemplate="content">
+            
+            <div class="form-container">
+                
+                <div class="field">
+                    <label for="identificacion">Identificación (RUC)</label>
+                    <input type="text" pInputText id="identificacion" [(ngModel)]="proveedor.identificacion" required autofocus maxlength="13" />
+                    <small class="p-error" *ngIf="submitted && !proveedor.identificacion">El RUC es obligatorio.</small>
+                </div>
+
+                <div class="field">
+                    <label for="razonSocial">Razón Social</label>
+                    <input type="text" pInputText id="razonSocial" [(ngModel)]="proveedor.razonSocial" required />
+                    <small class="p-error" *ngIf="submitted && !proveedor.razonSocial">La razón social es obligatoria.</small>
+                </div>
+
+                <div class="field">
+                    <label for="nombreComercial">Nombre Comercial</label>
+                    <input type="text" pInputText id="nombreComercial" [(ngModel)]="proveedor.nombreComercial" />
+                </div>
+
+                <div class="field">
+                    <label for="direccion">Dirección</label>
+                    <textarea pTextarea  id="direccion" pInputTextarea [(ngModel)]="proveedor.direccion" rows="3"></textarea>
+                </div>
+                <div class="field">
+                    <label for="estado">Estado</label>
+                    <p-select 
+                        id="estado"
+                        [options]="estadoOptions" 
+                        [(ngModel)]="proveedor.estado" 
+                        optionLabel="label" 
+                        optionValue="value"
+                        placeholder="Seleccione un estado"
+                        styleClass="w-full">
+                    </p-select> 
+                </div>
+
+                <div class="form-row">
+                    <div class="field form-col">
+                        <label for="telefono">Teléfono</label>
+                        <input type="text" pInputText id="telefono" [(ngModel)]="proveedor.telefono" />
+                    </div>
+                    <div class="field form-col">
+                        <label for="correo">Correo</label>
+                        <input type="email" pInputText id="correo" [(ngModel)]="proveedor.correo" />
+                    </div>
+                </div>
+
+                
+
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <div class="dialog-footer">
+                <p-button label="Cancelar" icon="pi pi-times" [text]="true" severity="secondary" (onClick)="hideDialog()"></p-button>
+                <p-button label="Guardar" icon="pi pi-check" severity="primary" (onClick)="saveProveedor()"></p-button>
+            </div>
+        </ng-template>
+    </p-dialog>
+
+</div>

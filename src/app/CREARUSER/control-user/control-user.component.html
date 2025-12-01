@@ -1,27 +1,20 @@
 <div class="card flex justify-content-center styled-card">
-  <p-tabView class="custom-stepper" [scrollable]="true">
-    <!-- Panel 1: Cajas -->
-    <p-tabPanel class="tabPersonal" >
-      <ng-template pTemplate="header">
-        <div class="stepper-header">
-          <h3 class="stepper-title">Registros Caja Chica</h3>
-          <i class="pi pi-box"></i>
-        </div>
-      </ng-template>
-      <app-caja-chica-registros></app-caja-chica-registros>
-    </p-tabPanel >
-    <p-tabPanel class="tabPersonal" >
-      <ng-template pTemplate="header">
-        <div class="stepper-header">
-          <h3 class="stepper-title">Registros Caja General</h3>
-          <i class="pi pi-box"></i>
-        </div>
-      </ng-template>
-      <app-caja-general-registros></app-caja-general-registros>
+  <p-tabs value="0">
+    <p-tablist>
+        <p-tab value="0">Registros Caja Chica</p-tab>
+        <p-tab value="1">Registros Caja General</p-tab>
 
-    </p-tabPanel >
-
-  </p-tabView>
+    </p-tablist>
+    <p-tabpanels>
+        <p-tabpanel value="0">
+                <app-caja-chica-registros></app-caja-chica-registros>
+        </p-tabpanel>
+        <p-tabpanel value="1">
+          <app-caja-general-registros></app-caja-general-registros>
+        </p-tabpanel>
+        </p-tabpanels>
+</p-tabs>
+  
 
 
 

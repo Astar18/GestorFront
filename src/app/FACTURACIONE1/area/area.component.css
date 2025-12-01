@@ -1,0 +1,60 @@
+/* --- Estilos Generales del Formulario --- */
+.form-container {
+    padding-top: 10px;
+}
+
+/* Estilo para cada campo (Label + Input) */
+.field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.25rem;
+}
+
+/* Estilo de las etiquetas */
+.field label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #374151;
+    font-size: 0.95rem;
+}
+
+/* Estilo para los mensajes de error */
+.p-error {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* Asegurar que todos los inputs de PrimeNG llenen el contenedor */
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep textarea {
+    width: 100%;
+}
+:host ::ng-deep .p-select#activo {
+    width: 100%;
+}
+/* Estilo específico para Textarea */
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* --- Footer del Diálogo --- */
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding-top: 10px;
+}
+
+/* --- RESPONSIVE --- */
+@media screen and (max-width: 640px) {
+    .dialog-footer {
+        flex-direction: column-reverse;
+    }
+    
+    .dialog-footer button {
+        width: 100%;
+    }
+}

@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, Subject, Subscription } from 'rxjs';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePicker } from 'primeng/datepicker';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +16,7 @@ import { DialogModule } from 'primeng/dialog';
 @Component({
     selector: 'app-estado-caja-chica',
     imports: [TableModule, CommonModule,ToastModule,ButtonModule, MatIconModule, DialogModule,
-      FormsModule,CalendarModule,InputTextModule],
+      FormsModule,DatePicker,InputTextModule],
     templateUrl: './estado-caja-chica.component.html',
     styleUrl: './estado-caja-chica.component.css',
     providers:[MessageService]

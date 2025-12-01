@@ -6,7 +6,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePicker } from 'primeng/datepicker';
 import { ButtonModule } from 'primeng/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CajaGeneralPRCService } from '../../Services/CajaGeneral/CajaGeneralPRC.service';
@@ -15,7 +15,7 @@ import { DialogModule } from 'primeng/dialog';
 @Component({
   selector: 'app-estado-general',
   standalone: true,
-  imports: [TableModule, CommonModule, ToastModule,FormsModule, InputTextModule,CalendarModule,ButtonModule, MatIconModule, DialogModule],
+  imports: [TableModule, CommonModule, ToastModule,FormsModule, InputTextModule,DatePicker,ButtonModule, MatIconModule, DialogModule],
   templateUrl: './estado-general.component.html',
   styleUrl: './estado-general.component.css',
   providers: [MessageService]

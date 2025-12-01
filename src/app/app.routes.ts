@@ -10,7 +10,7 @@ import { HomeCajasComponent } from './CAJAS/home-cajas/home-cajas.component';
 import { HomeChicaPComponent } from './CAJACHICAP/home-chica-p/home-chica-p.component';
 import { AuthGuard } from './Services/Guards/auth.guard';
 import { HomeGeneralPComponent } from './CAJAGENERALP/home-general-p/home-general-p.component';
-
+import { HomefacturaComponent } from './FACTURACIONE1/homefactura/homefactura.component';
 export const routes: Routes = [
   // {path:'nav',component:NavbarComponent},
   {path:'login',component:LoginComponent},
@@ -21,6 +21,7 @@ export const routes: Routes = [
   {path:'caja-g-crg',component:HomeCajaGenComponent,canActivate: [AuthGuard]},
   {path:'caja-c-crg',component:HomeCajaChicaComponent,canActivate: [AuthGuard]},
   {path:'caja-g-prc',component:HomeGeneralPComponent,canActivate: [AuthGuard]},
+  {path:'factura',component:HomefacturaComponent,canActivate: [AuthGuard]},
   {path: '', redirectTo: 'menu', pathMatch: 'full'},
 
 ];
